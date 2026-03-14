@@ -1,0 +1,49 @@
+@import "tailwindcss";
+
+@theme {
+    /* ── Primary Color ── */
+    --color-brand-primary: hsl(221, 83%, 53%);
+    --color-brand-primary-hover: hsl(221, 83%, 44%);
+    --color-brand-primary-foreground: hsl(0, 0%, 100%);
+    --color-brand-primary-soft: hsl(221, 83%, 95%);
+    --color-brand-primary-ring: hsl(221, 83%, 53%, 40%);
+
+    /* ── Success Color ── */
+    --color-brand-success: hsl(142, 72%, 40%);
+    --color-brand-success-hover: hsl(142, 72%, 32%);
+    --color-brand-success-foreground: hsl(0, 0%, 100%);
+    --color-brand-success-soft: hsl(142, 72%, 90%);
+    --color-brand-success-ring: hsl(142, 72%, 40%, 40%);
+
+    /* ── Danger Color ── */
+    --color-brand-danger: hsl(0, 84%, 55%);
+    --color-brand-danger-hover: hsl(0, 84%, 46%);
+    --color-brand-danger-foreground: hsl(0, 0%, 100%);
+    --color-brand-danger-soft: hsl(0, 84%, 95%);
+    --color-brand-danger-ring: hsl(0, 84%, 55%, 40%);
+
+    /* ── Neutral Color ── */
+    --color-brand-neutral: hsl(220, 9%, 46%);
+    --color-brand-neutral-hover: hsl(220, 9%, 37%);
+    --color-brand-neutral-foreground: hsl(0, 0%, 100%);
+    --color-brand-neutral-soft: hsl(220, 9%, 94%);
+    --color-brand-neutral-ring: hsl(220, 9%, 46%, 40%);
+
+    /* ── Shadows ── */
+    --shadow-brand: 0 2px 8px hsl(221, 83%, 53%, 35%);
+    --shadow-success: 0 2px 8px hsl(142, 72%, 40%, 35%);
+    --shadow-danger: 0 2px 8px hsl(0, 84%, 55%, 35%);
+}
+
+
+html {
+    font-family: system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    -webkit-font-smoothing: antialiased;
+}
+
+body {
+    min-height: 100vh;
+    background: #f8fafc;
+    color: #1e293b;
+    /* padding: 2rem; */
+}
