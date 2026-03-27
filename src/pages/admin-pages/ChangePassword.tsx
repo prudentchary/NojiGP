@@ -9,6 +9,7 @@ import { useNavigate, Link } from "react-router";
 import { useToast } from "@/components/ui/Toast";
 import { cn } from "@/lib/cn"; 
 import { PasswordLength } from "@/components/ui/PasswordLength";
+import api from "@/lib/api";
 
 const EyeIcon = () => (
     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -75,16 +76,23 @@ const ChangePassword: React.FC = () => {
 
     const isFormFilled = oldPasswordValue.length > 0 && isNewPasswordStrong;
 
-    const onSubmit = async (data: ResetPasswordFormValues) => {
-        setLoading(true);
+ const onSubmit = async (data: ResetPasswordFormValues) => {
+    setLoading(true);
 
-        // Simulated API delay
-        setTimeout(() => {
-            setLoading(false);
-            success("Password changed successfully!");
-            navigate("/dashboard");
-        }, 1500);
-    };
+    try {
+        // hits the POST /auth/change-password endpoint in your Swagger
+        await api.post("/auth/change-password", data);
+        // If the server accepts the change:
+        success("Password changed successfully!");
+        navigate("/dashboard");
+    } catch (err: any) {
+        // If the server rejects it
+        const errorMessage = err.response?.data?.message || "Failed to update password";
+        toastError(errorMessage);
+    } finally {
+        setLoading(false);
+    }
+};
 
     return (
         <div

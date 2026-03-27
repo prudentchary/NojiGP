@@ -27,6 +27,7 @@ import UserBehaviour from "@/pages/admin-pages/monitoring/UserBehaviour";
 import CompliancePolicy from "@/pages/admin-pages/monitoring/CompliancePolicy";
 import EndpointDevices from "@/pages/admin-pages/monitoring/EndpointDevices";
 import NetworkActivity from "@/pages/admin-pages/monitoring/NetworkActivity";
+import ProtectedRoute from "@/components/ProtectedRoute";
 
 // Configuration subpages
 import PolicyConfigs from "@/pages/admin-pages/configuration/PolicyConfigs";
@@ -46,6 +47,7 @@ function App() {
             <Route path="/verify-otp" element={<OTPPage />} />
 
             {/* Admin Routes with Layout Wrapper */}
+            <Route element={<ProtectedRoute />}>
             <Route element={<Layout />}>
               <Route path="/dashboard" element={<Dashboard />} />
               <Route path="/team" element={<Team />} />
@@ -65,6 +67,7 @@ function App() {
               <Route path="/configuration/audit-logs" element={<AuditLogs />} />
               <Route path="/integrations" element={<Integrations />} />
               <Route path="/change-password" element={<ChangePassword />} />
+            </Route>
             </Route>
 
             {/* Development/Preview Routes */}
