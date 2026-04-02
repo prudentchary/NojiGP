@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { X } from "lucide-react";
+import { X, MailCheck } from "lucide-react"; // Added MailCheck for a nice icon
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
@@ -8,6 +8,7 @@ import { Input } from "@/components/ui/Input";
 import { useNavigate, Link } from "react-router";
 import backgroundImage from "@/assets/login_bg.png";
 import { useToast } from "@/components/ui/Toast";
+import api from "@/lib/api";
 
 const forgotPasswordSchema = z.object({
     email: z.string().email("Please enter a valid email address"),
@@ -16,7 +17,6 @@ const forgotPasswordSchema = z.object({
 type ForgotPasswordFormValues = z.infer<typeof forgotPasswordSchema>;
 
 const ForgotPassword: React.FC = () => {
-    const navigate = useNavigate();
     const { success, error: toastError } = useToast();
     const [isSuccess, setIsSuccess] = useState(false);
     const [loading, setLoading] = useState(false);
@@ -28,9 +28,7 @@ const ForgotPassword: React.FC = () => {
         formState: { errors },
     } = useForm<ForgotPasswordFormValues>({
         resolver: zodResolver(forgotPasswordSchema),
-        defaultValues: {
-            email: "",
-        },
+        defaultValues: { email: "" },
     });
 
     const emailValue = watch("email");
@@ -38,17 +36,23 @@ const ForgotPassword: React.FC = () => {
 
     const onSubmit = async (data: ForgotPasswordFormValues) => {
         setLoading(true);
-        // Simulate API call
-        setTimeout(() => {
-            setLoading(false);
-            success("Password Reset Initiated!");
+        try {
+            await api.post("/auth/forgot-password", {
+                email: data.email,
+            });
+            success("Reset link sent successfully!");
             setIsSuccess(true);
-        }, 1500);
+        } catch (err: any) {
+            const errorMessage = err.response?.data?.message || "Failed to initiate password reset.";
+            toastError(errorMessage);
+        } finally {
+            setLoading(false);
+        }
     };
 
     return (
         <div
-            className="min-h-screen w-full flex items-center justify-center bg-cover bg-center bg-no-repeat p-4 sm:p-6"
+            className="min-h-screen w-full flex items-center justify-center bg-cover bg-center bg-no-repeat p-4"
             style={{ backgroundImage: `url(${backgroundImage})` }}
         >
             <div className="relative w-full max-w-[540px] bg-white rounded-[10px] shadow-2xl overflow-hidden animate-in fade-in zoom-in-95 duration-500">
@@ -56,13 +60,14 @@ const ForgotPassword: React.FC = () => {
                 <div className="flex justify-between items-start pt-8 px-8 pb-5">
                     <div>
                         <h2 className="text-[28px] font-bold text-slate-900 tracking-tight leading-none mb-3">
-                            Forgot Password
+                            {isSuccess ? "Check your email" : "Forgot Password"}
                         </h2>
-                        {!isSuccess && (
-                            <p className="text-[#94A3B8] text-[15px] max-w-sm">
-                                Stay informed about our progress and be the first to get on board
-                            </p>
-                        )}
+                        <p className="text-[#94A3B8] text-[15px] max-w-sm">
+                            {isSuccess 
+                                ? "We've sent a password reset link to your inbox." 
+                                : "Enter your email address and we'll send you a link to reset your password."
+                            }
+                        </p>
                     </div>
                     <Link to="/login" className="text-slate-400 hover:text-slate-600 transition-colors p-1">
                         <X className="size-6" />
@@ -71,24 +76,19 @@ const ForgotPassword: React.FC = () => {
 
                 <div className="h-[1px] bg-slate-100 w-full" />
 
-                {/* Content */}
                 <div className="p-8 pt-6">
                     {!isSuccess ? (
                         <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
-                            <div className="space-y-2 w-full">
-                                <Input
-                                    id="forgot-email"
-                                    label="Email address"
-                                    type="email"
-                                    placeholder="Enter email"
-                                    variant="filled"
-                                    {...register("email")}
-                                    error={errors.email?.message}
-                                    helperText="Only official email address"
-                                    className="h-11 rounded-md bg-[#F8FAFC]"
-                                    containerClassName="gap-1 w-full"
-                                />
-                            </div>
+                            <Input
+                                id="forgot-email"
+                                label="Email address"
+                                type="email"
+                                placeholder="Enter your official email"
+                                variant="filled"
+                                {...register("email")}
+                                error={errors.email?.message}
+                                className="h-11 rounded-md bg-[#F8FAFC]"
+                            />
 
                             <Button
                                 type="submit"
@@ -96,31 +96,38 @@ const ForgotPassword: React.FC = () => {
                                 size="lg"
                                 fullWidth
                                 isLoading={loading}
-                                className={
-                                    "h-[46px] font-medium tracking-wide border-none transition-all duration-300 rounded-md " +
-                                    (isFormFilled
-                                        ? "bg-slate-900 text-white hover:bg-slate-800 active:bg-black cursor-pointer"
-                                        : "bg-[#E2E8F0] text-slate-400 cursor-not-allowed pointer-events-none")
-                                }
+                                disabled={!isFormFilled}
+                                className={`h-[46px] font-medium transition-all duration-300 rounded-md ${
+                                    isFormFilled ? "bg-slate-900 text-white" : "bg-slate-200 text-slate-400"
+                                }`}
                             >
-                                Submit
+                                Send Reset Link
                             </Button>
                         </form>
                     ) : (
-                        <div className="space-y-8 animate-in fade-in duration-500">
-                            <div className="space-y-1 text-slate-500 text-[15px]">
+                        <div className="space-y-6 text-center py-4 animate-in slide-in-from-bottom-4 duration-500">
+                            <div className="bg-emerald-50 text-emerald-600 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+                                <MailCheck className="size-8" />
+                            </div>
+                            <div className="text-slate-600 text-[15px] leading-relaxed">
                                 <p>
-                                    A 6 digit OTP has been sent to <span className="font-semibold">{emailValue || "john@organisation1.com"}</span>
+                                    A verification link has been sent to: <br/>
+                                    <span className="font-bold text-slate-900">{emailValue}</span>
                                 </p>
-                                <p>Kindly enter the code to continue.</p>
+                                <p className="mt-2">Please click the link in the email to set your new password.</p>
                             </div>
 
-                            <button
-                                type="button"
-                                className="text-[#0D9488] font-semibold text-[15px] hover:text-[#0C8075] transition-colors"
-                            >
-                                Resend OTP
-                            </button>
+                            <div className="pt-4 border-t border-slate-50">
+                                <p className="text-sm text-slate-400">
+                                    Didn't receive the email?{" "}
+                                    <button 
+                                        onClick={() => setIsSuccess(false)}
+                                        className="text-[#0D9488] font-semibold hover:underline"
+                                    >
+                                        Try again
+                                    </button>
+                                </p>
+                            </div>
                         </div>
                     )}
                 </div>

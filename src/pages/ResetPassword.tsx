@@ -100,7 +100,7 @@ const ResetPassword: React.FC = () => {
                             Reset Password
                         </h2>
                         <p className="text-[#94A3B8] text-[15px]">
-                            Reset password by providing your current password and entering thr new one.
+                            Reset password by providing your current password and entering the new one.
                         </p>
                     </div>
                     <Link to="/login" className="text-slate-400 hover:text-slate-600 transition-colors p-1 mt-1">
