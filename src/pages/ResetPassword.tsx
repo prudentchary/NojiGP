@@ -72,7 +72,7 @@ const ResetPassword: React.FC = () => {
 
     const isFormValid = isNewPasswordStrong && newPasswordValue === confirmPasswordValue;
 
- const onSubmit = async (data: ResetPasswordFormValues) => {
+const onSubmit = async (data: ResetPasswordFormValues) => {
     if (!token) {
         toastError("Invalid or missing reset token. Please request a new link.");
         return;
@@ -81,19 +81,23 @@ const ResetPassword: React.FC = () => {
     setLoading(true);
 
     try {
-        // This sends the token from the URL and the new password to your server
+        // MATCHING SWAGGER EXACTLY: 
+        // 1. Change 'password' to 'newPassword'
+        // 2. Add 'confirmPassword'
         const response = await api.post("/auth/reset-password", {
             token: token,
-            password: data.newPassword,
+            newPassword: data.newPassword,
+            confirmPassword: data.confirmPassword,
         });
 
-        if (response.status === 200) {
+        if (response.status === 200 || response.status === 201) {
             success("Password updated successfully!");
             navigate("/login");
         }
     } catch (err: any) {
-        // If the token is expired or the server is down, show the error
-        toastError(err.response?.data?.message || "Failed to update password. Please try again.");
+        // This will now show the specific error from the server instead of just "Internal Server Error"
+        console.error("Server Error Detail:", err.response?.data);
+        toastError(err.response?.data?.message || "Internal Server Error. Please try a new link.");
     } finally {
         setLoading(false);
     }
