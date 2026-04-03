@@ -10,6 +10,7 @@ import { useToast } from "@/components/ui/Toast";
 import { cn } from "@/lib/cn";
 import backgroundImage from "@/assets/login_bg.png";
 import { PasswordLength } from "@/components/ui/PasswordLength";
+import api from "@/lib/api"; 
 
 const EyeIcon = () => (
     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -71,21 +72,32 @@ const ResetPassword: React.FC = () => {
 
     const isFormValid = isNewPasswordStrong && newPasswordValue === confirmPasswordValue;
 
-    const onSubmit = async (data: ResetPasswordFormValues) => {
-        if (!token) {
-            toastError("Invalid or missing reset token.");
-            return;
-        }
+ const onSubmit = async (data: ResetPasswordFormValues) => {
+    if (!token) {
+        toastError("Invalid or missing reset token. Please request a new link.");
+        return;
+    }
 
-        setLoading(true);
-        
-        // Simulated API call - replace this with your actual axios/fetch call later
-        setTimeout(() => {
-            setLoading(false);
+    setLoading(true);
+
+    try {
+        // This sends the token from the URL and the new password to your server
+        const response = await api.post("/auth/reset-password", {
+            token: token,
+            password: data.newPassword,
+        });
+
+        if (response.status === 200) {
             success("Password updated successfully!");
             navigate("/login");
-        }, 1500);
-    };
+        }
+    } catch (err: any) {
+        // If the token is expired or the server is down, show the error
+        toastError(err.response?.data?.message || "Failed to update password. Please try again.");
+    } finally {
+        setLoading(false);
+    }
+};
 
     return (
         <div
