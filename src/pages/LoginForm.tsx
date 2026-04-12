@@ -101,8 +101,8 @@ const LoginForm: React.FC = () => {
 
       success('OTP sent! Please check your email.');
 
-     // 3. Navigate to the OTP page
-     
+      // 3. Navigate to the OTP page
+
       navigate('/verify-otp', { state: { email: data.email } });
     } catch (err: any) {
       console.log('FULL ERROR:', err);

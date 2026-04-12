@@ -8,9 +8,9 @@ import { cn } from '@/lib/cn';
 import backgroundImage from '@/assets/login_bg.png';
 import api from '@/lib/api';
 import { useLocation } from 'react-router-dom';
-import { useAuth } from '../hooks/useAuth'; //zustand auth store
+import { useAuth } from '../hooks/useAuth'; //zustand
 const OTPPage: React.FC = () => {
-  const { login } = useAuth(); // Get the login function
+  const { login } = useAuth(); // login auth
   const location = useLocation();
   const navigate = useNavigate();
   const userEmail = location.state?.email || 'User';
@@ -18,7 +18,7 @@ const OTPPage: React.FC = () => {
   const [otp, setOtp] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [timeLeft, setTimeLeft] = useState(300); // 5 minutes in seconds
+  const [timeLeft, setTimeLeft] = useState(300);
 
   useEffect(() => {
     if (timeLeft <= 0) return;
@@ -34,14 +34,9 @@ const OTPPage: React.FC = () => {
     return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
   };
 
-  const handleComplete = (value: string) => {
-    console.log('OTP Completed:', value);
-  };
+  const handleComplete = (value: string) => {};
 
-
-
-
- const handleSubmit = async (e?: React.FormEvent) => {
+  const handleSubmit = async (e?: React.FormEvent) => {
     if (e) e.preventDefault();
     if (otp.length !== 6) {
       setError('Please enter all 6 digits.');
@@ -58,25 +53,25 @@ const OTPPage: React.FC = () => {
       });
 
       const token = response.data.token || response.data.accessToken;
-      
+
       if (token) {
         localStorage.setItem('auth_token', token);
 
-        // --- CHANGE START ---
-        // We make sure there is ALWAYS a name to show in the sidebar
         const userData = {
           email: userEmail,
-          // If backend sends a name, use it. Otherwise, use the email as the name.
-          name: response.data.user?.name || response.data.user?.fullName || userEmail,
-          ...response.data.user, // spread any other data
+          name:
+            response.data.user?.name ||
+            response.data.user?.fullName ||
+            userEmail,
+          ...response.data.user,
         };
 
         login({
           ...userData,
           token,
         });
-        // --- CHANGE END ---
 
+        console.log('THE ENTIRE BOX:', response.data);
         success('Verification successful! Welcome back.');
         navigate('/dashboard');
       }
@@ -89,7 +84,7 @@ const OTPPage: React.FC = () => {
     } finally {
       setLoading(false);
     }
-  }
+  };
 
   const handleOtpChange = (value: string) => {
     setOtp(value);
@@ -130,7 +125,6 @@ const OTPPage: React.FC = () => {
                 length={6}
                 value={otp}
                 onChange={handleOtpChange}
-                onComplete={handleComplete}
                 error={error}
                 className='gap-3 sm:gap-4'
                 inputClassName='w-[62px] h-[52px] rounded-[8px] text-lg sm:w-[58px]'
@@ -139,7 +133,6 @@ const OTPPage: React.FC = () => {
 
             <div className='flex justify-between items-center px-0.5'>
               <span
-              
                 className={cn(
                   'text-[13px] font-medium tracking-tight transition-colors duration-200',
                   error ? 'text-rose-500' : 'text-slate-400',

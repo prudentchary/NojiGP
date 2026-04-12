@@ -67,7 +67,7 @@ const ChangePassword: React.FC = () => {
     const oldPasswordValue = watch("oldPassword");
     const newPasswordValue = watch("newPassword");
 
-    // Check if new password meets all criteria
+    
     const isNewPasswordStrong =
         newPasswordValue.length >= 8 &&
         /[A-Z]/.test(newPasswordValue) &&
@@ -80,13 +80,13 @@ const ChangePassword: React.FC = () => {
     setLoading(true);
 
     try {
-        // hits the POST /auth/change-password endpoint in your Swagger
+       
         await api.post("/auth/change-password", data);
-        // If the server accepts the change:
+       
         success("Password changed successfully!");
         navigate("/dashboard");
     } catch (err: any) {
-        // If the server rejects it
+     
         const errorMessage = err.response?.data?.message || "Failed to update password";
         toastError(errorMessage);
     } finally {

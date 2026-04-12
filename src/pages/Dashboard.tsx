@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router";
 import { StatCard } from "@/components/common/StatCard";
 import { Modal } from "@/components/ui/Modal";
@@ -8,12 +8,23 @@ import { AlertTrendsChart, DonutChartSmall, SystemHealthChart } from "@/componen
 import { ChevronDown, TrendingUp } from "lucide-react";
 import { cn } from "@/lib/cn";
 import { useLayoutContext } from "@/components/common/LayoutContext";
+import { useAuth } from "@/hooks/useAuth";
+
 
 const Dashboard: React.FC = () => {
+   const { user } = useAuth();
     const { isGridLayout } = useLayoutContext();
     const navigate = useNavigate();
-    const [isModalOpen, setIsModalOpen] = useState(true);
+    
+    // Start with the modal CLOSED
+    const [isModalOpen, setIsModalOpen] = useState(false);
 
+    // This "Watcher" ensures the modal pops up as soon as the data is ready
+    useEffect(() => {
+        if (user?.isFirstLogin === true) {
+            setIsModalOpen(true);
+        }
+    }, [user]);
     return (
         <div className="flex flex-col w-full">
             <Modal

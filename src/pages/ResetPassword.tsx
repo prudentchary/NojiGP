@@ -27,7 +27,7 @@ const EyeOffIcon = () => (
     </svg>
 );
 
-// UPDATED SCHEMA: Removed oldPassword, added confirmPassword check
+
 const resetPasswordSchema = z.object({
     newPassword: z.string().min(8, "Password must be at least 8 characters"),
     confirmPassword: z.string().min(1, "Please confirm your password"),
@@ -81,9 +81,7 @@ const onSubmit = async (data: ResetPasswordFormValues) => {
     setLoading(true);
 
     try {
-        // MATCHING SWAGGER EXACTLY: 
-        // 1. Change 'password' to 'newPassword'
-        // 2. Add 'confirmPassword'
+        
         const response = await api.post("/auth/reset-password", {
             token: token,
             newPassword: data.newPassword,
@@ -95,8 +93,6 @@ const onSubmit = async (data: ResetPasswordFormValues) => {
             navigate("/login");
         }
     } catch (err: any) {
-        // This will now show the specific error from the server instead of just "Internal Server Error"
-        console.error("Server Error Detail:", err.response?.data);
         toastError(err.response?.data?.message || "Internal Server Error. Please try a new link.");
     } finally {
         setLoading(false);
