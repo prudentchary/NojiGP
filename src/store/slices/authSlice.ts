@@ -1,5 +1,5 @@
-import { StateCreator } from 'zustand';
-import api from '../../lib/api';
+import { StateCreator } from 'zustand'; //state management library
+import api from '../../lib/api'; // import API 
 
 export interface AuthSlice {
   user: any | null;
@@ -10,9 +10,11 @@ export interface AuthSlice {
 }
 
 export const createAuthSlice: StateCreator<AuthSlice> = (set) => ({
-  // Keep your exact initialization logic
+ 
   user: JSON.parse(localStorage.getItem('user_data') || 'null'),
   isAuthenticated: !!localStorage.getItem('auth_token'),
+
+  // log in     
 
   login: (data: any) => {
     console.log("DEBUG: Logging in user", data);
@@ -22,12 +24,14 @@ export const createAuthSlice: StateCreator<AuthSlice> = (set) => ({
     }
     set({ user: data, isAuthenticated: true });
   },
-
+ 
+// log out
   logout: () => {
     localStorage.removeItem('auth_token');
     localStorage.removeItem('user_data');
     set({ user: null, isAuthenticated: false });
   },
+  //fetching profile data to keep the user state updated, especially after page refreshes or when the app initializes
 
   fetchProfile: async () => {
     try {

@@ -1,7 +1,6 @@
-// src/hooks/useAuth.ts
-import { useAppStore } from '../store';
+import { useAppStore } from '../store'; // Impoting the Zustand from store/uaeAuth 
 
-// This makes the rest of your app think nothing changed!
-export const useAuth = () => {
-  return useAppStore();
+
+export const useAuth = <T>(selector: (state: any) => T = (state: any) => state as T): T => {
+  return useAppStore(selector);
 };

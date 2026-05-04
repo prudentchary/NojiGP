@@ -34,7 +34,7 @@ const Dashboard: React.FC = () => {
     }
   }, [user]); // Now this only runs when 'user' state is updated by fetchProfile
 
-  // ... rest of your component ...
+ 
   return (
     <div className='flex flex-col w-full'>
       <Modal

@@ -64,7 +64,7 @@ type LoginFormValues = z.infer<typeof loginSchema>;
 
 const LoginForm: React.FC = () => {
   const navigate = useNavigate();
-  const login = useAuth((state) => state.login); // calling auth function to set the user as logged in
+  const login = useAuth((state) => state.login); 
   const { success, error: toastError } = useToast();
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
