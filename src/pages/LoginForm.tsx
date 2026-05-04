@@ -97,7 +97,6 @@ const LoginForm: React.FC = () => {
         email: data.email,
         password: data.password,
       });
-      console.log('Login API Response:', response.data);
 
       success('OTP sent! Please check your email.');
 

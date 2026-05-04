@@ -19,7 +19,6 @@ const OTPPage: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [timeLeft, setTimeLeft] = useState(300);
-
   useEffect(() => {
     if (timeLeft <= 0) return;
     const timer = setInterval(() => {
@@ -64,8 +63,9 @@ const OTPPage: React.FC = () => {
             response.data.user?.fullName ||
             userEmail,
           ...response.data.user,
+          isFirstLogin:
+            response.data.isFirstLogin ?? response.data.user?.isFirstLogin,
         };
-
         login({
           ...userData,
           token,

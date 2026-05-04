@@ -1,4 +1,5 @@
-import React, { createContext, useContext, useState, ReactNode, useEffect } from "react";
+import React, { createContext, useContext, useState, ReactNode } from "react";
+import { useTheme } from "../../app/providers/ThemeProvider";
 
 interface LayoutContextProps {
     isSidebarOpen: boolean;
@@ -13,23 +14,13 @@ const LayoutContext = createContext<LayoutContextProps | undefined>(undefined);
 
 export const LayoutProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
     const [isSidebarOpen, setIsSidebarOpen] = useState(true);
-    const [isDarkMode, setIsDarkMode] = useState(false);
     const [isGridLayout, setIsGridLayout] = useState(true);
+    
+    // Connect to the global ThemeProvider
+    const { theme, toggleTheme } = useTheme();
+    const isDarkMode = theme === 'dark';
 
     const toggleSidebar = () => setIsSidebarOpen(prev => !prev);
-
-    const toggleTheme = () => {
-        setIsDarkMode(prev => {
-            const nextMode = !prev;
-            if (nextMode) {
-                document.documentElement.classList.add("dark");
-            } else {
-                document.documentElement.classList.remove("dark");
-            }
-            return nextMode;
-        });
-    };
-
     const toggleLayoutMode = () => setIsGridLayout(prev => !prev);
 
     return (
