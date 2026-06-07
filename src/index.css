@@ -1,7 +1,8 @@
 @import 'tailwindcss';
 
+@custom-variant dark (&:where(.dark, .dark *));
+
 @theme {
-   --variant-dark: .dark &;
   /* ── Primary Color ── */
   --color-brand-primary: hsl(221, 83%, 53%);
   --color-brand-primary-hover: hsl(221, 83%, 44%);
@@ -51,3 +52,4 @@
   --spacing-btn-x: 1rem;
   --spacing-btn-y: 0.5rem;
 }
+

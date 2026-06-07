@@ -30,6 +30,8 @@ export const createAuthSlice: StateCreator<AuthSlice> = (set) => ({
     localStorage.removeItem('auth_token');
     localStorage.removeItem('user_data');
     set({ user: null, isAuthenticated: false });
+//clear everything in the console after log out 
+  console.clear();
   },
   //fetching profile data to keep the user state updated, especially after page refreshes or when the app initializes
 

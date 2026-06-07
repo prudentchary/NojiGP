@@ -104,7 +104,6 @@ const LoginForm: React.FC = () => {
 
       navigate('/verify-otp', { state: { email: data.email } });
     } catch (err: any) {
-      console.log('FULL ERROR:', err);
       const errorMessage =
         err.response?.data?.message ||
         err.response?.data ||

@@ -179,55 +179,58 @@ const ChangePassword: React.FC = () => {
                 />
               </div>
 
-              {/* New Password Field */}
+{/* Grid Container for New and Confirm Fields */}
+<div className="grid grid-cols-1 sm:grid-cols-2 gap-4 w-full">
 
-              <div className='space-y-2 text-left w-full'>
-                <Input
-                  id='newPassword'
-                  label='New password'
-                  type={showNewPassword ? 'text' : 'password'}
-                  placeholder='............'
-                  variant='filled'
-                  {...register('newPassword')}
-                  error={errors.newPassword?.message}
-                  className='h-11 rounded-md text-2xl font-mono'
-                  containerClassName='gap-1 w-full'
-                  rightElement={
-                    <button
-                      type='button'
-                      onClick={() => setShowNewPassword(!showNewPassword)}
-                      className='text-slate-600 hover:text-slate-900 transition-all duration-200 outline-none focus:ring-0 py-2 mr-2'
-                    >
-                      {showNewPassword ? <EyeOffIcon /> : <EyeIcon />}
-                    </button>
-                  }
-                />
-              </div>
+  {/* New Password Field */}
+  <div className="space-y-2 text-left w-full min-w-0">
+    <Input
+      id="newPassword"
+      label="New password"
+      type={showNewPassword ? 'text' : 'password'}
+      placeholder="............"
+      variant="filled"
+      {...register('newPassword')}
+      error={errors.newPassword?.message}
+      className="h-11 rounded-md text-2xl font-mono w-full"
+      containerClassName="gap-1 w-full relative"
+      rightElement={
+        <button
+          type="button"
+          onClick={() => setShowNewPassword(!showNewPassword)}
+          className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-600 hover:text-slate-900 transition-all duration-200 outline-none focus:ring-0 flex items-center justify-center"
+        >
+          {showNewPassword ? <EyeOffIcon /> : <EyeIcon />}
+        </button>
+      }
+    />
+  </div>
 
-              {/* Confirm Password Field */}
-              <div className='space-y-2 text-left w-full'>
-                <Input
-                  id='confirmPassword'
-                  label='Confirm password'
-                  type={showNewPassword ? 'text' : 'password'}
-                  placeholder='............'
-                  variant='filled'
-                  {...register('confirmPassword')}
-                  error={errors.confirmPassword?.message}
-                  className='h-11 rounded-md text-2xl font-mono'
-                  containerClassName='gap-1 w-full'
-                  rightElement={
-                    <button
-                      type='button'
-                      onClick={() => setShowNewPassword(!showNewPassword)}
-                      className='text-slate-600 hover:text-slate-900 transition-all duration-200 outline-none focus:ring-0 py-2 mr-2'
-                    >
-                      {showNewPassword ? <EyeOffIcon /> : <EyeIcon />}
-                    </button>
-                  }
-                />
-              </div>
+  {/* Confirm Password Field */}
+  <div className="space-y-2 text-left w-full min-w-0">
+    <Input
+      id="confirmPassword"
+      label="Confirm password"
+      type={showNewPassword ? 'text' : 'password'}
+      placeholder="............"
+      variant="filled"
+      {...register('confirmPassword')}
+      error={errors.confirmPassword?.message}
+      className="h-11 rounded-md text-2xl font-mono w-full"
+      containerClassName="gap-1 w-full relative"
+      rightElement={
+        <button
+          type="button"
+          onClick={() => setShowNewPassword(!showNewPassword)}
+          className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-600 hover:text-slate-900 transition-all duration-200 outline-none focus:ring-0 flex items-center justify-center"
+        >
+          {showNewPassword ? <EyeOffIcon /> : <EyeIcon />}
+        </button>
+      }
+    />
+  </div>
 
+</div>
               {newPasswordValue.length > 0 && (
                 <div className='pt-2'>
                   <PasswordLength password={newPasswordValue} />
