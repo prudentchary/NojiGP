@@ -1,117 +1,214 @@
 import React, { useState } from 'react';
-import { Plus, Slack, Github, Cloud, Mail, Zap, MessageSquare, Search, ArrowUpRight } from 'lucide-react';
+import { 
+    Plus, 
+    Search, 
+    ArrowUp, 
+    Edit2, 
+    Trash2, 
+    CheckCircle2,
+    Cloud,
+    Shield,
+    Lock,
+    Zap
+} from 'lucide-react';
 import { cn } from '@/lib/cn';
+import { AddServiceModal, RemoveServiceModal } from '@/components/composite/Modal';
+import { CustomAlert } from '@/components/composite/Alert';
+import Integrattion_Logo from '../../assets/integration_logo.png'
+
+interface Integration {
+    id: string;
+    name: string;
+    provider: string;
+    status: 'Active' | 'Inactive';
+    health: number;
+    type: string;
+    integratedOn: string;
+}
 
 const Integrations: React.FC = () => {
-    const [searchTerm, setSearchTerm] = useState('');
+    const [integrations, setIntegrations] = useState<Integration[]>([]);
+    const [isAddModalOpen, setIsAddModalOpen] = useState(false);
+    const [isRemoveModalOpen, setIsRemoveModalOpen] = useState(false);
+    const [selectedIntegration, setSelectedIntegration] = useState<Integration | null>(null);
+    const [alert, setAlert] = useState<{ title: string; description: string; variant?: 'success' | 'failed' } | null>(null);
 
-    const integrations = [
-        { icon: Slack, name: "Slack", category: "Communication", description: "Receive real-time alerts and incident reports directly in your Slack channels.", connected: true },
-        { icon: Github, name: "GitHub", category: "Development", description: "Automate PR scanning and source code vulnerability tracking for your repositories.", connected: true },
-        { icon: Cloud, name: "AWS S3", category: "Cloud Storage", description: "Backup security logs and historical incident data to encrypted S3 buckets.", connected: true },
-        { icon: Mail, name: "SendGrid", category: "Email", description: "Configure automated email reports and security notifications.", connected: false },
-        { icon: Zap, name: "Webhook", category: "Utility", description: "Custom outgoing webhooks to trigger external CI/CD or security pipelines.", connected: false },
-        { icon: MessageSquare, name: "Intercom", category: "CRM", description: "Sync security status and risk profiles with your customer support platform.", connected: false },
-    ];
+    const handleAddService = (data: any) => {
+        const newIntegration: Integration = {
+            id: Math.random().toString(36).substr(2, 9),
+            name: data.provider,
+            provider: data.provider,
+            status: 'Active',
+            health: 95,
+            type: data.type === 'SIEM' ? 'SIEM' : (data.type === 'Identity provider (IDP)' ? 'IDP' : 'Storage'),
+            integratedOn: new Date().toLocaleDateString('en-GB', {
+                day: '2-digit',
+                month: 'short',
+                year: 'numeric'
+            }) + ', ' + new Date().toLocaleTimeString('en-US', {
+                hour: '2-digit',
+                minute: '2-digit',
+                hour12: true
+            }).toLowerCase()
+        };
+
+        setIntegrations([...integrations, newIntegration]);
+        setIsAddModalOpen(false);
+        setAlert({
+            title: `${newIntegration.type} integration successful`,
+            description: `Your ${newIntegration.name} has been successfully integrated with Noji Guardian protocol`
+        });
+    };
+
+    const handleRemoveConfirm = () => {
+        if (selectedIntegration) {
+            setIntegrations(integrations.filter(i => i.id !== selectedIntegration.id));
+            setIsRemoveModalOpen(false);
+            setSelectedIntegration(null);
+        }
+    };
 
     return (
-        <div className="flex flex-col w-full gap-8 animate-in fade-in duration-500 pb-12">
-            
-            {/* Page Header */}
-            <div className="flex flex-col gap-6">
-                <div className="flex items-center justify-between">
-                    <div>
-                        <h1 className="text-[22px] font-bold text-slate-800 dark:text-white tracking-tight">Integrations</h1>
-                        <p className="text-[14px] text-slate-400 font-medium">Connect and manage your security ecosystem toolchain.</p>
-                    </div>
-                    <button className="flex items-center gap-2 bg-[#14B8A6] text-white px-5 py-2.5 rounded-xl text-[14px] font-bold hover:bg-[#0D9488] transition-all shadow-sm">
-                        <Plus className="size-4" />
-                        Add New
-                    </button>
+        <div className="flex flex-col w-full min-h-screen bg-[#F8FAFC]/50 dark:bg-slate-950/50 p-2 md:p-4 animate-in fade-in duration-500">
+            {/* Success Alert */}
+            {alert && (
+                <div className="mb-4">
+                    <CustomAlert 
+                        title={alert.title}
+                        description={alert.description}
+                        variant={alert.variant}
+                        onClose={() => setAlert(null)}
+                    />
                 </div>
+            )}
 
-                {/* Sub-header / Filter */}
-                <div className="flex items-center gap-4">
-                    <div className="relative flex-1 max-w-md">
-                        <Search className="absolute left-4 top-1/2 -translate-y-1/2 size-5 text-slate-300" />
-                        <input 
-                            type="text" 
-                            placeholder="Filter integrations..." 
-                            value={searchTerm}
-                            onChange={(e) => setSearchTerm(e.target.value)}
-                            className="w-full pl-12 pr-4 h-12 bg-white border border-slate-50 rounded-xl text-[14px] outline-none placeholder:text-slate-400 dark:bg-slate-900 dark:border-slate-800 shadow-sm"
-                        />
-                    </div>
-                    <div className="flex items-center gap-2">
-                        {['All', 'Active', 'Storage', 'Alerts'].map((tab) => (
-                            <button key={tab} className={cn(
-                                "px-4 py-2 rounded-lg text-[13px] font-bold transition-all",
-                                tab === 'All' ? "bg-slate-900 text-white" : "text-slate-400 hover:text-slate-600 dark:hover:text-slate-300"
-                            )}>
-                                {tab}
-                            </button>
-                        ))}
-                    </div>
+            {/* Content Area */}
+            <div className="bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 shadow-sm overflow-hidden flex flex-col">
+                <div className="overflow-x-auto">
+                    <table className="w-full text-left border-collapse table-fixed">
+                        <thead>
+                            <tr className="bg-slate-50/50 dark:bg-slate-900/50 border-b border-slate-100 dark:border-slate-800">
+                                <th className="w-[25%] px-6 py-3 text-[13px] font-bold text-slate-400">Integration service</th>
+                                <th className="w-[12%] px-6 py-3 text-[13px] font-bold text-slate-400">Status</th>
+                                <th className="w-[18%] px-6 py-3 text-[13px] font-bold text-slate-400">Health</th>
+                                <th className="w-[12%] px-6 py-3 text-[13px] font-bold text-slate-400">Type</th>
+                                <th className="w-[20%] px-6 py-3 text-[13px] font-bold text-slate-400">Integrated on</th>
+                                <th className="w-[13%] px-6 py-3 text-[13px] font-bold text-slate-400 text-right">
+                                    <div className="flex justify-end items-center gap-4">
+                                        <span>Action</span>
+                                        {integrations.length > 0 && (
+                                            <button 
+                                                onClick={() => setIsAddModalOpen(true)}
+                                                className="p-1.5 bg-[#14B8A6] text-white rounded-lg hover:bg-[#0D9488] transition-colors shadow-sm"
+                                                title="Add Integration"
+                                            >
+                                                <Plus className="size-4" />
+                                            </button>
+                                        )}
+                                    </div>
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {integrations.length === 0 ? (
+                                <tr>
+                                    <td colSpan={6} className="py-24 md:py-32">
+                                        <div className="flex flex-col items-center justify-center">
+                                            <div className="w-48 h-48">
+                                                <img 
+                                                    src={Integrattion_Logo}
+                                                    alt="No services" 
+                                                    className="w-full h-full object-contain"
+                                                />
+                                            </div>
+                                            <div className="flex items-center gap-2">
+                                                <span className="text-[16px] font-medium text-slate-400">No services connected</span>
+                                                <button 
+                                                    onClick={() => setIsAddModalOpen(true)}
+                                                    className="text-[16px] font-bold text-[#14B8A6] hover:text-[#0D9488] flex items-center gap-1 transition-colors"
+                                                >
+                                                    Add API service <Plus className="size-4" />
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                            ) : (
+                                integrations.map((item) => (
+                                    <tr key={item.id} className="border-b border-slate-50 dark:border-slate-800/50 hover:bg-slate-50/30 dark:hover:bg-slate-800/30 transition-colors">
+                                        <td className="px-6 py-5 overflow-hidden">
+                                            <div className="flex items-center gap-3">
+                                                <div className="size-8 shrink-0 rounded-lg bg-slate-100 dark:bg-slate-800 flex items-center justify-center">
+                                                    <ProviderIcon name={item.name} />
+                                                </div>
+                                                <span className="text-[14px] font-semibold text-slate-700 dark:text-slate-200 truncate">{item.name}</span>
+                                            </div>
+                                        </td>
+                                        <td className="px-6 py-5">
+                                            <span className="inline-flex items-center gap-1.5 px-2.5 py-1 bg-emerald-50 dark:bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 rounded-full text-[12px] font-bold">
+                                                <div className="size-1.5 rounded-full bg-emerald-500" />
+                                                {item.status}
+                                            </span>
+                                        </td>
+                                        <td className="px-6 py-5">
+                                            <div className="flex items-center gap-1.5 text-[14px] font-medium text-slate-600 dark:text-slate-300">
+                                                {item.health}% <ArrowUp className="size-3.5 text-emerald-500" />
+                                            </div>
+                                        </td>
+                                        <td className="px-6 py-5">
+                                            <span className="text-[14px] font-medium text-slate-500 dark:text-slate-400">{item.type}</span>
+                                        </td>
+                                        <td className="px-6 py-5">
+                                            <span className="text-[14px] font-medium text-slate-500 dark:text-slate-400">{item.integratedOn}</span>
+                                        </td>
+                                        <td className="px-6 py-5">
+                                            <div className="flex items-center justify-end gap-3">
+                                                <button className="p-2 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 transition-colors bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 rounded-lg shadow-sm">
+                                                    <Edit2 className="size-4" />
+                                                </button>
+                                                <button 
+                                                    onClick={() => {
+                                                        setSelectedIntegration(item);
+                                                        setIsRemoveModalOpen(true);
+                                                    }}
+                                                    className="p-2 text-rose-400 hover:text-rose-600 transition-colors bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 rounded-lg shadow-sm"
+                                                >
+                                                    <Trash2 className="size-4" />
+                                                </button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                ))
+                            )}
+                        </tbody>
+                    </table>
                 </div>
             </div>
 
-            {/* Integrations Grid */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {integrations.map((item, i) => (
-                    <IntegrationCard key={i} {...item} />
-                ))}
-            </div>
+            {/* Modals */}
+            <AddServiceModal 
+                isOpen={isAddModalOpen} 
+                onClose={() => setIsAddModalOpen(false)} 
+                onSubmit={handleAddService}
+            />
+
+            {selectedIntegration && (
+                <RemoveServiceModal 
+                    isOpen={isRemoveModalOpen}
+                    onClose={() => setIsRemoveModalOpen(false)}
+                    onConfirm={handleRemoveConfirm}
+                    serviceName={selectedIntegration.name}
+                />
+            )}
         </div>
     );
 };
 
-const IntegrationCard = ({ icon: Icon, name, category, description, connected }: any) => (
-    <div className="bg-white border border-slate-50 rounded-[28px] p-8 shadow-sm dark:bg-slate-900 dark:border-slate-800 group transition-all hover:-translate-y-1 hover:shadow-xl relative overflow-hidden">
-        {/* Subtle Background Accent */}
-        <div className={cn(
-            "absolute top-0 right-0 size-24 blur-3xl opacity-5 transition-opacity group-hover:opacity-10 pointer-events-none",
-            connected ? "bg-emerald-500" : "bg-slate-500"
-        )} />
-
-        <div className="flex items-start justify-between mb-8">
-            <div className={cn(
-                "p-4 rounded-2xl transition-all",
-                connected ? "bg-slate-900 text-white shadow-lg" : "bg-slate-50 text-slate-300 dark:bg-slate-800"
-            )}>
-                <Icon className="size-6" />
-            </div>
-            {connected ? (
-                <div className="flex items-center gap-1.5 px-3 py-1 bg-emerald-50 text-emerald-600 rounded-full">
-                    <div className="size-1.5 rounded-full bg-emerald-500 animate-pulse" />
-                    <span className="text-[11px] font-black uppercase tracking-wider">Active</span>
-                </div>
-            ) : (
-                <span className="px-3 py-1 bg-slate-50 text-slate-400 text-[11px] font-black uppercase tracking-wider dark:bg-slate-800">Inactive</span>
-            )}
-        </div>
-
-        <div className="space-y-3 mb-10">
-            <div className="flex items-center gap-2">
-                <h3 className="text-[18px] font-black text-slate-800 dark:text-white">{name}</h3>
-                <span className="text-[11px] font-bold text-slate-300 uppercase tracking-widest leading-none mt-0.5 opacity-60">• {category}</span>
-            </div>
-            <p className="text-[14px] leading-relaxed text-slate-400 font-medium">{description}</p>
-        </div>
-
-        <div className="flex items-center gap-3">
-            <button className={cn(
-                "flex-1 h-12 rounded-xl text-[14px] font-black transition-all",
-                connected 
-                    ? "bg-slate-50 text-slate-600 hover:bg-slate-100 dark:bg-slate-800 dark:text-slate-300" 
-                    : "bg-slate-900 text-white hover:bg-slate-800"
-            )}>
-                {connected ? 'Manage Settings' : 'Setup Integration'}
-            </button>
-            <button className="size-12 rounded-xl bg-slate-50 flex items-center justify-center text-slate-400 hover:text-slate-900 transition-all dark:bg-slate-800">
-                <ArrowUpRight className="size-5" />
-            </button>
-        </div>
-    </div>
-);
+const ProviderIcon = ({ name }: { name: string }) => {
+    if (name.includes('Azure') || name.includes('Microsoft')) return <Shield className="size-4 text-blue-500" />;
+    if (name.includes('Google')) return <Zap className="size-4 text-orange-500" />;
+    if (name.includes('AWS')) return <Cloud className="size-4 text-amber-500" />;
+    return <Lock className="size-4 text-slate-400" />;
+};
 
 export default Integrations;
