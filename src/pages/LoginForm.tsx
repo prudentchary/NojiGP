@@ -64,7 +64,7 @@ type LoginFormValues = z.infer<typeof loginSchema>;
 
 const LoginForm: React.FC = () => {
   const navigate = useNavigate();
-  const login = useAuth((state) => state.login); // calling auth function to set the user as logged in
+  const login = useAuth((state) => state.login); 
   const { success, error: toastError } = useToast();
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -97,15 +97,13 @@ const LoginForm: React.FC = () => {
         email: data.email,
         password: data.password,
       });
-      console.log('Login API Response:', response.data);
 
       success('OTP sent! Please check your email.');
 
-     // 3. Navigate to the OTP page
-     
+      // 3. Navigate to the OTP page
+
       navigate('/verify-otp', { state: { email: data.email } });
     } catch (err: any) {
-      console.log('FULL ERROR:', err);
       const errorMessage =
         err.response?.data?.message ||
         err.response?.data ||

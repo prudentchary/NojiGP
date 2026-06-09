@@ -3,6 +3,10 @@
     {
       "source": "/api/:path*",
       "destination": "https://ca-tenant-backend-api-dev.whitebeach-41771a65.centralus.azurecontainerapps.io/:path*"
+    },
+    {
+      "source": "/(.*)",
+      "destination": "/index.html"
     }
   ]
 }

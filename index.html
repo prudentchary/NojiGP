@@ -5,9 +5,26 @@
     <link rel="icon" type="image/svg+xml" href="/vite.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>nojiadmin</title>
+    <script>
+    (function () {
+      try {
+        // Read the 'theme' key that your ThemeProvider.tsx saves
+        const savedTheme = localStorage.getItem('theme');
+        
+        if (savedTheme === 'dark') {
+          document.documentElement.classList.add('dark');
+        } else {
+          document.documentElement.classList.remove('dark');
+        }
+      } catch (e) {
+        console.error('Theme injection blocked', e);
+      }
+    })();
+  </script>
+  
   </head>
   <body>
     <div id="root"></div>
-    <script type="module" src="/src/main.jsx"></script>
+    <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>

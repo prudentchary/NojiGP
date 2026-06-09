@@ -10,6 +10,9 @@ import {
 import { cn } from "@/lib/cn";
 import { useLayoutContext } from "./LayoutContext";
 import { useLocation, Link } from "react-router";
+//testing the alertSlice
+// import { useAppStore } from "@/store";
+// const { alerts, setAlerts } = useAppStore();
 
 export const Header: React.FC = () => {
     const { toggleSidebar, isDarkMode, toggleTheme, toggleLayoutMode } = useLayoutContext();
