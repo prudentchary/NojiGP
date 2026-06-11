@@ -2,26 +2,21 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router';
 import { Table, Badge } from '@/components/ui';
 
-interface Department {
+interface TeamMember {
     id: string;
     name: string;
-    description: string;
-    staffCount: number;
+    role: string;
+    department: string;
     riskScore: number;
-    riskLevel: 'Low' | 'Med' | 'High';
+    scrs: 'Low' | 'Med' | 'High';
+    incidents: number;
+    lastActive: string;
 }
 
-const mockDepartments: Department[] = [
-    { id: '1', name: 'Finance', description: 'Oversees finance', staffCount: 50, riskScore: 30, riskLevel: 'Low' },
-    { id: '2', name: 'Finance', description: 'Oversees finance', staffCount: 50, riskScore: 30, riskLevel: 'Low' },
-    { id: '3', name: 'Finance', description: 'Oversees finance', staffCount: 50, riskScore: 30, riskLevel: 'Low' },
-    { id: '4', name: 'Finance', description: 'Oversees finance', staffCount: 50, riskScore: 30, riskLevel: 'Low' },
-    { id: '5', name: 'Finance', description: 'Oversees finance', staffCount: 50, riskScore: 30, riskLevel: 'Low' },
-    { id: '6', name: 'Finance', description: 'Oversees finance', staffCount: 50, riskScore: 30, riskLevel: 'Low' },
-    { id: '7', name: 'Finance', description: 'Oversees finance', staffCount: 50, riskScore: 30, riskLevel: 'Low' },
-    { id: '8', name: 'Finance', description: 'Oversees finance', staffCount: 50, riskScore: 30, riskLevel: 'Low' },
-    { id: '9', name: 'Finance', description: 'Oversees finance', staffCount: 50, riskScore: 30, riskLevel: 'Low' },
-    { id: '10', name: 'Finance', description: 'Oversees finance', staffCount: 50, riskScore: 30, riskLevel: 'Low' },
+const mockTeamMembers: TeamMember[] = [
+    { id: '1', name: 'Kate Huntington', role: 'Financial officer', department: 'Finance', riskScore: 89, scrs: 'High', incidents: 3, lastActive: '12 Jan 2023, 12:90am' },
+    { id: '2', name: 'Kate Huntington', role: 'Financial officer', department: 'Finance', riskScore: 67, scrs: 'Med', incidents: 1, lastActive: '12 Jan 2023, 12:90am' },
+    { id: '3', name: 'Kate Huntington', role: 'Financial officer', department: 'Finance', riskScore: 29, scrs: 'Low', incidents: 0, lastActive: '12 Jan 2023, 12:90am' },
 ];
 
 const Team: React.FC = () => {
@@ -30,40 +25,83 @@ const Team: React.FC = () => {
     const [rowsPerPage, setRowsPerPage] = useState(10);
 
     const columns = [
-        { header: 'Department', key: 'name' },
-        { header: 'Description', key: 'description' },
-        { header: 'No of staff', key: 'staffCount' },
         { 
-            header: 'AVG risk score', 
-            key: 'riskScore',
-            render: (dept: Department) => (
-                <div className="flex items-center gap-3">
-                    <span className="text-slate-400 font-medium">{dept.riskLevel}</span>
-                    <div className="px-2 py-0.5 rounded-full bg-emerald-50 border border-emerald-100/50 text-emerald-600 text-[13px] font-bold">
-                        {dept.riskScore}
-                    </div>
+            header: 'Staff', 
+            key: 'name',
+            render: (staff: TeamMember) => (
+                <div className="flex flex-col">
+                    <span className="font-bold text-slate-800">{staff.name}</span>
+                    <span className="text-sm text-slate-400">{staff.role}</span>
                 </div>
             )
         },
+        { header: 'Department', key: 'department' },
+        { header: 'Risk score', key: 'riskScore' },
+        { 
+            header: 'SCRS', 
+            key: 'scrs',
+            render: (staff: TeamMember) => {
+                const colorMap = { High: 'text-rose-500 bg-rose-50', Med: 'text-amber-500 bg-amber-50', Low: 'text-emerald-500 bg-emerald-50' };
+                return (
+                    <div className={`px-3 py-1 rounded-full w-max text-[13px] font-bold ${colorMap[staff.scrs]}`}>
+                        {staff.scrs}
+                    </div>
+                );
+            }
+        },
+        { header: 'Incidents', key: 'incidents' },
+        { header: 'Last active', key: 'lastActive' }
     ];
 
     return (
-        <div className="flex flex-col w-full">
-            <Table
-                columns={columns}
-                data={mockDepartments}
-                onRowClick={(dept) => navigate(`/team/${dept.id}`)}
-                pagination={{
-                    currentPage: currentPage,
-                    totalPages: 200,
-                    onPageChange: (page) => setCurrentPage(page),
-                    rowsPerPage: rowsPerPage,
-                    onRowsPerPageChange: (rows) => {
-                        setRowsPerPage(rows);
-                        setCurrentPage(1); // Reset to first page when rows per page changes
-                    }
-                }}
-            />
+        <div className="flex flex-col w-full gap-8">
+            {/* Overview Header tailored for individual view (team-3.jpg) */}
+            <div className="grid grid-cols-5 gap-4">
+                <div className="col-span-1 bg-white p-6 rounded-[20px] border border-slate-50 shadow-sm flex flex-col justify-center">
+                    <span className="text-sm font-semibold text-slate-500">SCRS</span>
+                    <div className="flex items-baseline gap-1 mt-2">
+                        <span className="text-5xl font-black text-slate-900">40</span>
+                        <span className="text-2xl font-bold text-slate-400 opacity-80">%</span>
+                    </div>
+                </div>
+                {/* Additional Metric Cards here */}
+            </div>
+
+            {/* Security Score Trend */}
+            <div className="bg-white p-6 rounded-[20px] border border-slate-50 shadow-sm">
+                <h3 className="text-lg font-bold text-slate-900 mb-4">Security score trend</h3>
+                <div className="h-[250px] w-full bg-slate-50 rounded-lg">
+                    {/* Insert Line Chart Component Here */}
+                </div>
+            </div>
+
+            {/* Timelines with fixed headers */}
+            <div className="grid grid-cols-2 gap-8">
+                 <div>
+                     <h3 className="text-lg font-bold text-slate-900 mb-4 border-b pb-2">Incidents</h3>
+                     {/* Incidents list */}
+                 </div>
+                 <div>
+                     <h3 className="text-lg font-bold text-slate-900 mb-4 border-b pb-2">Activity timeline</h3>
+                     {/* Activity list */}
+                 </div>
+            </div>
+
+            {/* Table View (team-2.png) */}
+            <div className="mt-8">
+                <Table
+                    columns={columns}
+                    data={mockTeamMembers}
+                    onRowClick={(staff) => navigate(`/team/finance/${staff.id}`)}
+                    pagination={{
+                        currentPage,
+                        totalPages: 200,
+                        onPageChange: setCurrentPage,
+                        rowsPerPage,
+                        onRowsPerPageChange: (rows) => { setRowsPerPage(rows); setCurrentPage(1); }
+                    }}
+                />
+            </div>
         </div>
     );
 };

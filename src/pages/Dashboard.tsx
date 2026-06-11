@@ -5,6 +5,7 @@ import { Modal } from '@/components/ui/Modal';
 import { Button } from '@/components/ui/Button';
 import logo2 from '@/assets/logo2.png';
 import {
+  SCRSTrendChart,
   AlertTrendsChart,
   DonutChartSmall,
   SystemHealthChart,
@@ -36,6 +37,57 @@ const Dashboard: React.FC = () => {
 
  
   return (
+    <div className='flex flex-col w-full'>
+      {/* Overview Header Section */}
+      <div className='flex items-center justify-between mb-8'>
+        <h2 className='text-xl font-bold text-slate-800 tracking-tight'>
+          Overview
+        </h2>
+        <button className='flex items-center gap-2 text-sm font-semibold text-slate-400 hover:text-slate-600 transition-colors bg-white px-4 py-2 rounded-lg border border-slate-50 shadow-sm'>
+          Today
+          <ChevronDown className='size-4' />
+        </button>
+      </div>
+
+      {/* Top Section: Organization SCRS & Score Drivers */}
+      <div className={cn('grid grid-cols-1 gap-8 mb-8', isGridLayout ? 'lg:grid-cols-2' : '')}>
+        <div className='bg-white border border-slate-50 rounded-[20px] p-8 shadow-sm flex flex-col justify-between'>
+          <h3 className='text-lg font-bold text-slate-900 mb-4'>Organization SCRS</h3>
+          <div className='flex items-baseline gap-0.5 mb-4'>
+             <span className='text-[48px] font-bold text-slate-900 leading-none'>60</span>
+             <span className='text-2xl font-bold text-slate-400'>%</span>
+          </div>
+          <div className='flex items-center justify-center py-2'>
+            <DonutChartSmall data={[{ label: 'Healthy', value: 52.1, color: '#0D9488' }]} />
+          </div>
+        </div>
+
+        <div className='bg-white border border-slate-50 rounded-[20px] p-8 shadow-sm'>
+          <h3 className='text-lg font-bold text-slate-900 mb-4'>Score drivers</h3>
+          <ScoreDriversBarChart />
+        </div>
+      </div>
+
+      {/* SCRS Trend & Top Contributors */}
+      <div className={cn('grid grid-cols-1 gap-8 mb-8', isGridLayout ? 'lg:grid-cols-3' : '')}>
+        <div className={cn('bg-white border border-slate-50 rounded-[24px] p-8 shadow-sm', isGridLayout ? 'lg:col-span-2' : '')}>
+          <div className='flex items-center justify-between mb-8 pb-4 border-b border-slate-50'>
+             <h3 className='text-[18px] font-bold text-slate-800'>SCRS Trend</h3>
+             <button className='flex items-center gap-2 text-[14px] font-semibold text-slate-400'>
+               Today <ChevronDown className='size-4' />
+             </button>
+          </div>
+          <div className='h-[300px] w-full'>
+            <SCRSTrendChart />
+          </div>
+        </div>
+
+        <div className='bg-white border border-slate-50 rounded-[24px] p-8 shadow-sm'>
+          <h3 className='text-[18px] font-bold text-slate-800 mb-6'>Top contributors to SCRS</h3>
+          {/* Map through top contributors here */}
+        </div>
+      </div>
+      
     <div className='flex flex-col w-full'>
       <Modal
         isOpen={isModalOpen}
@@ -145,7 +197,7 @@ const Dashboard: React.FC = () => {
           />
           <StatCard
             label='Integration health'
-            value='7'
+            value='90%'
             percentage='+11.01%'
             variant='slate'
           />
