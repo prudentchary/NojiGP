@@ -1,8 +1,10 @@
 @import 'tailwindcss';
+@config '../tailwind.config.ts';
 
 @custom-variant dark (&:where(.dark, .dark *));
 
 @theme {
+
   /* ── Primary Color ── */
   --color-brand-primary: hsl(221, 83%, 53%);
   --color-brand-primary-hover: hsl(221, 83%, 44%);

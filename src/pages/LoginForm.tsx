@@ -130,10 +130,10 @@ const LoginForm: React.FC = () => {
       {/* Semi-transparent overlay to match the image depth if needed, but the image is already dark */}
       {/* <div className="absolute inset-0 bg-black/20 pointer-events-none" /> */}
 
-      <div className='relative w-full max-w-[520px] bg-white rounded-[10px] shadow-2xl overflow-hidden animate-in fade-in zoom-in-95 duration-500'>
+      <div className='relative w-full max-w-[520px] bg-white rounded-[10px] shadow-2xl overflow-hidden animate-in fade-in zoom-in-95 duration-500  dark:bg-slate-700'>
         {/* Header */}
-        <div className='flex justify-between items-center px-8 pt-8 pb-4'>
-          <h1 className='text-2xl font-bold text-slate-800 tracking-tight'>
+        <div className='flex justify-between items-center px-8 pt-8 pb-4 '>
+          <h1 className='text-2xl font-bold text-slate-800 tracking-tight dark:text-slate-100'>
             Login To Your Account
           </h1>
           <Link
@@ -149,7 +149,7 @@ const LoginForm: React.FC = () => {
           <form className='space-y-6' onSubmit={handleSubmit(onSubmit)}>
             <div className='space-y-5'>
               {/* Email Field */}
-              <div className='space-y-2'>
+              <div className='space-y-2 '>
                 <Input
                   id='email'
                   label='Email address'
@@ -161,7 +161,7 @@ const LoginForm: React.FC = () => {
                   })}
                   error={errors.email?.message}
                   helperText='Only official email address'
-                  className='h-11 rounded-md'
+                  className='h-11 rounded-md border-transparent'
                   containerClassName='gap-1'
                 />
               </div>

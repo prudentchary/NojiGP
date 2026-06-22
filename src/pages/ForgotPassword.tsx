@@ -55,14 +55,14 @@ const ForgotPassword: React.FC = () => {
             className="min-h-screen w-full flex items-center justify-center bg-cover bg-center bg-no-repeat p-4"
             style={{ backgroundImage: `url(${backgroundImage})` }}
         >
-            <div className="relative w-full max-w-[540px] bg-white rounded-[10px] shadow-2xl overflow-hidden animate-in fade-in zoom-in-95 duration-500">
+            <div className="relative w-full max-w-[540px] bg-white rounded-[10px] shadow-2xl overflow-hidden animate-in fade-in zoom-in-95 duration-500 dark:bg-slate-700">
                 {/* Header */}
                 <div className="flex justify-between items-start pt-8 px-8 pb-5">
                     <div>
-                        <h2 className="text-[28px] font-bold text-slate-900 tracking-tight leading-none mb-3">
+                        <h2 className="text-[28px] font-bold text-slate-900 tracking-tight leading-none mb-3 dark:text-slate-50">
                             {isSuccess ? "Check your email" : "Forgot Password"}
                         </h2>
-                        <p className="text-[#94A3B8] text-[15px] max-w-sm">
+                        <p className="text-[#94A3B8] text-[15px] max-w-sm dark:text-slate-200">
                             {isSuccess 
                                 ? "We've sent a password reset link to your inbox." 
                                 : "Enter your email address and we'll send you a link to reset your password."
@@ -87,7 +87,7 @@ const ForgotPassword: React.FC = () => {
                                 variant="filled"
                                 {...register("email")}
                                 error={errors.email?.message}
-                                className="h-11 rounded-md bg-[#F8FAFC]"
+                                className="h-11 rounded-md"
                             />
 
                             <Button

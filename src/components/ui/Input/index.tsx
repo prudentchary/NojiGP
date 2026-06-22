@@ -37,7 +37,7 @@ const sizeMap: Record<Size, { container: string; input: string; element: string 
 
 const variantClasses: Record<Variant, string> = {
     outline: "border border-[rgba(138,143,148,1)] bg-white focus-within:border-transparent focus-within:ring-0",
-    filled: "border bg-slate-100 hover:bg-slate-200/70 focus-within:bg-white focus-within:border-transparent focus-within:ring-1",
+    filled: "border bg-slate-100 hover:bg-slate-200/70 focus-within:bg-slate-200/70 focus-within:border-transparent focus-within:ring-1 dark:bg-slate-500 dark:border-transparent dark:text-slate-100",
     flushed: "border-b border-slate-200 bg-transparent rounded-none px-0 focus-within:border-slate-500 focus-within:ring-0",
     unstyled: "border-none bg-transparent p-0 focus-within:ring-0",
 };
@@ -54,7 +54,7 @@ const colorSchemeMap: Record<ColorScheme, string> = {
 export const Input = forwardRef<HTMLInputElement, InputProps>(
     (
         {
-            variant = "outline",
+            variant = "",
             colorScheme = "slate",
             size = "md",
             label,
@@ -78,7 +78,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
                     <label
                         htmlFor={id}
                         className={cn(
-                            "text-[13px] font-medium ml-0.5 transition-colors duration-200",
+                            "text-[13px] font-medium ml-0.5 transition-colors duration-200 dark:text-slate-100",
                             isInvalid ? "text-rose-500" : "text-slate-700"
                         )}
                     >
@@ -105,7 +105,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
                         ref={ref}
                         id={id}
                         className={cn(
-                            "flex-1 h-full bg-transparent outline-none appearance-none placeholder:text-slate-400",
+                            "flex-1 h-full bg-transparent outline-none appearance-none placeholder:text-slate-300",
                             variant === "flushed" ? "px-0" : leftElement ? "pl-2" : sizeConfig.input,
                             rightElement ? "pr-2" : variant === "flushed" ? "px-0" : sizeConfig.input,
                             className
@@ -124,7 +124,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
                     <p className="text-[11px] font-medium text-rose-500 mt-0.5 ml-0.5">{error}</p>
                 ) : helperText ? (
                     <p className={cn(
-                        "text-[11px] mt-0.5 ml-0.5 transition-colors duration-200",
+                        "text-[11px] mt-0.5 ml-0.5 transition-colors duration-200 dark:text-slate-50",
                         isInvalid ? "text-rose-500" : "text-slate-500"
                     )}>{helperText}</p>
                 ) : null}

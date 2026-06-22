@@ -16,7 +16,7 @@ import { useLayoutContext } from '@/components/common/LayoutContext';
 import { useAuth } from '@/hooks/useAuth';
 
 const Dashboard: React.FC = () => {
-  const { user, isAuthenticated, fetchProfile } = useAuth(); // Add fetchProfile here
+  const { user, isAuthenticated, fetchProfile } = useAuth(); 
   const { isGridLayout } = useLayoutContext();
   const navigate = useNavigate();
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -140,7 +140,7 @@ const Dashboard: React.FC = () => {
 
       {/* Overview Header Section */}
       <div className='flex items-center justify-between mb-8'>
-        <h2 className='text-xl font-bold text-slate-800 tracking-tight'>
+        <h2 className='text-xl font-bold text-slate-800 tracking-tight dark:text-slate-50'>
           Overview
         </h2>
         <button className='flex items-center gap-2 text-sm font-semibold text-slate-400 hover:text-slate-600 transition-colors bg-white px-4 py-2 rounded-lg border border-slate-50 shadow-sm'>
@@ -187,19 +187,19 @@ const Dashboard: React.FC = () => {
             label='Users with elevated risk'
             value='7'
             percentage='+11.01%'
-            variant='slate'
+            variant='emerald'
           />
           <StatCard
             label='Policy violations'
             value='7'
             percentage='+11.01%'
-            variant='amber'
+            variant='default'
           />
           <StatCard
             label='Integration health'
             value='90%'
             percentage='+11.01%'
-            variant='slate'
+            variant='amber'
           />
         </div>
 
@@ -243,7 +243,7 @@ const Dashboard: React.FC = () => {
         {/* Alert Trends Container */}
         <div
           className={cn(
-            'bg-white border border-slate-50 rounded-[24px] p-8 shadow-sm',
+            'bg-white border border-slate-50 rounded-[24px] p-8 shadow-sm dark:bg-slate-700',
             isGridLayout ? 'lg:col-span-2' : '',
           )}
         >
@@ -282,7 +282,7 @@ const Dashboard: React.FC = () => {
         </div>
 
         {/* System Health Overview */}
-        <div className='bg-white border border-slate-50 rounded-[24px] p-8 shadow-sm'>
+        <div className='bg-white border border-slate-50 rounded-[24px] p-8 shadow-sm  dark:bg-slate-700'>
           <div className='flex items-center justify-between mb-10'>
             <h3 className='text-[18px] font-bold text-slate-800 tracking-tight'>
               System health overview
@@ -302,7 +302,7 @@ const Dashboard: React.FC = () => {
       >
         <div
           className={cn(
-            'bg-white border border-slate-100 rounded-[20px] p-8 shadow-sm h-[200px] flex items-center justify-between',
+            'bg-white border border-slate-100 rounded-[20px] p-8 shadow-sm h-[200px] flex items-center justify-between  dark:bg-slate-700',
             isGridLayout ? 'lg:col-span-2' : '',
           )}
         >
@@ -318,7 +318,7 @@ const Dashboard: React.FC = () => {
           </div>
         </div>
 
-        <div className='bg-white border border-slate-100 rounded-[20px] p-8 shadow-sm h-[200px] flex items-center justify-between'>
+        <div className='bg-white border border-slate-100 rounded-[20px] p-8 shadow-sm h-[200px] flex items-center justify-between  dark:bg-slate-700'>
           <h3 className='text-lg font-bold text-slate-900'>Events by status</h3>
           <button className='flex items-center gap-2 text-sm font-semibold text-slate-400 hover:text-slate-600 transition-colors'>
             Today <ChevronDown className='size-4' />

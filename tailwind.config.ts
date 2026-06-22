@@ -71,7 +71,7 @@ const config: Config = {
       },
 
       fontFamily: {
-        sans: ["Inter", "ui-sans-serif", "system-ui"],
+        sans: ["Poppins", "ui-sans-serif", "system-ui"],
         mono: ["JetBrains Mono", "monospace"],
       },
 

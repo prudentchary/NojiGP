@@ -12,6 +12,7 @@ import {
 } from "lucide-react";
 import { cn } from "@/lib/cn";
 import logo1 from "@/assets/Logo1.png";
+import logo from "@/assets/Logo.png";
 import { Link, useLocation, useNavigate } from "react-router";
 import { useLayoutContext } from "./LayoutContext";
 import { useAuth } from "../../hooks/useAuth";
@@ -117,15 +118,27 @@ export const Sidebar: React.FC = () => {
 
     return (
         <aside className={cn(
-            "h-screen border-r border-slate-100 flex flex-col bg-white shrink-0 sticky top-0 overflow-y-auto transition-all duration-300 dark:bg-slate-900 dark:border-slate-800",
+            "h-screen border-r border-slate-100 flex flex-col bg-white shrink-0 sticky top-0 overflow-y-auto transition-all duration-300 dark:bg-slate-800 dark:border-slate-900",
             isSidebarOpen ? "w-[280px]" : "w-0 overflow-hidden opacity-0 border-r-0"
         )}>
             {/* Brand Logo */}
-            <div className="p-8 flex items-center gap-3 flex-col">
-                <div className="p-1">
-                    <img src={logo1} alt="Noji Logo" className="w-full h-auto" />
-                </div>
-            </div>
+            <div className="p-8 flex items-start gap-3 flex-col">
+  <div className="p-1">
+    {/* Light Mode Logo: Visible by default, hidden when 'dark:' mode is active */}
+    <img 
+      src={logo1} 
+      alt="Noji Logo Light" 
+      className="w-full h-auto dark:hidden" 
+    />
+    
+    {/* Dark Mode Logo: Hidden by default, displayed as a block when 'dark:' mode is active */}
+    <img 
+      src={logo} 
+      alt="Noji Logo Dark" 
+      className="hidden w-full h-auto dark:block" 
+    />
+  </div>
+</div>
 
             {/* Navigation */}
             <nav className="flex-1 px-4 space-y-1">

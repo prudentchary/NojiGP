@@ -14,9 +14,9 @@ export const PolicyViolationModal: React.FC<PolicyViolationModalProps> = ({ isOp
         <Modal
             isOpen={isOpen}
             onClose={onClose}
-            className="max-w-[480px] rounded-[24px] p-10"
+            className="max-w-[480px] rounded-[24px] p-10 dark:  dark:bg-slate-950"
         >
-            <div className="flex flex-col gap-6 w-full">
+            <div className="flex flex-col gap-6 w-full ">
                 <div className="space-y-1">
                     <h2 className="text-[24px] font-bold text-slate-900 dark:text-white tracking-tight">Policy violation</h2>
                     <p className="text-[14px] font-semibold text-slate-400">No VPN. Unapproved location</p>
