@@ -96,10 +96,10 @@ const OTPPage: React.FC = () => {
       className='min-h-screen w-full flex items-center justify-center bg-cover bg-center bg-no-repeat p-4 sm:p-6'
       style={{ backgroundImage: `url(${backgroundImage})` }}
     >
-      <div className='relative w-full max-w-[536px] bg-white rounded-[10px] shadow-2xl overflow-hidden animate-in fade-in zoom-in-95 duration-500'>
+      <div className='relative w-full max-w-[536px] bg-white rounded-[10px] shadow-2xl overflow-hidden animate-in fade-in zoom-in-95 duration-500 dark:bg-[#1F262E]'>
         {/* Header */}
         <div className='flex justify-between items-center px-8 pt-8 pb-4'>
-          <h1 className='text-2xl font-bold text-slate-800 tracking-tight'>
+          <h1 className='text-2xl font-bold text-slate-800 tracking-tight dark:text-slate-50'>
             Enter OTP
           </h1>
           <Link
@@ -149,7 +149,7 @@ const OTPPage: React.FC = () => {
                 Expires in:{' '}
                 <span
                   className={cn(
-                    'font-bold transition-colors duration-200',
+                    'font-bold transition-colors duration-200 dark:text-slate-200',
                     error ? 'text-rose-500' : 'text-slate-900',
                   )}
                 >
@@ -160,21 +160,21 @@ const OTPPage: React.FC = () => {
 
             <div className='pt-2'>
               <Button
-                type='submit'
-                colorScheme='slate'
-                size='lg'
-                fullWidth
-                isLoading={loading}
-                disabled={otp.length !== 6 || loading}
-                className={cn(
-                  'h-12 font-bold tracking-widest uppercase border-none transition-all duration-300 rounded-[4px]',
-                  otp.length === 6 && !loading
-                    ? 'bg-slate-900 text-white hover:bg-slate-800 active:bg-black cursor-pointer'
-                    : 'bg-[#E2E8F0] text-slate-400 pointer-events-none',
-                )}
-              >
-                Submit
-              </Button>
+  type="submit"
+  // Let the core component dynamically toggle the styling rules!
+  colorScheme={otp.length === 6 && !loading ? "gradient" : "slate"}
+  size="lg"
+  fullWidth
+  isLoading={loading}
+  disabled={otp.length !== 6 || loading}
+  className={cn(
+    "h-12 font-bold tracking-widest uppercase border-none transition-all duration-300 rounded-[4px]",
+    // Only manage the disabled appearance overrides here
+    otp.length !== 6 && "bg-[#E2E8F0] text-slate-400 dark:bg-[#313740] dark:text-slate-500 pointer-events-none"
+  )}
+>
+  Submit
+</Button>
             </div>
 
             <div className='flex justify-center pt-2'>

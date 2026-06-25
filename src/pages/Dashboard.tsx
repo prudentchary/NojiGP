@@ -5,7 +5,8 @@ import { Modal } from '@/components/ui/Modal';
 import { Button } from '@/components/ui/Button';
 import logo2 from '@/assets/logo2.png';
 import {
-  SCRSTrendChart,
+  // SCRSTrendChart,
+  // ScoreDriversBarChart,
   AlertTrendsChart,
   DonutChartSmall,
   SystemHealthChart,
@@ -40,7 +41,7 @@ const Dashboard: React.FC = () => {
     <div className='flex flex-col w-full'>
       {/* Overview Header Section */}
       <div className='flex items-center justify-between mb-8'>
-        <h2 className='text-xl font-bold text-slate-800 tracking-tight'>
+        <h2 className='text-xl font-bold text-slate-800 tracking-tight dark:text-slate-50'>
           Overview
         </h2>
         <button className='flex items-center gap-2 text-sm font-semibold text-slate-400 hover:text-slate-600 transition-colors bg-white px-4 py-2 rounded-lg border border-slate-50 shadow-sm'>
@@ -51,25 +52,25 @@ const Dashboard: React.FC = () => {
 
       {/* Top Section: Organization SCRS & Score Drivers */}
       <div className={cn('grid grid-cols-1 gap-8 mb-8', isGridLayout ? 'lg:grid-cols-2' : '')}>
-        <div className='bg-white border border-slate-50 rounded-[20px] p-8 shadow-sm flex flex-col justify-between'>
-          <h3 className='text-lg font-bold text-slate-900 mb-4'>Organization SCRS</h3>
+        <div className='bg-white border border-slate-50 rounded-[20px] p-8 shadow-sm flex flex-col justify-between dark:bg-[#1F262E] dark:border-transparent dark:text-slate-50'>
+          <h3 className='text-lg font-bold text-slate-900 mb-4 dark:text-slate-50'>Organization SCRS</h3>
           <div className='flex items-baseline gap-0.5 mb-4'>
-             <span className='text-[48px] font-bold text-slate-900 leading-none'>60</span>
-             <span className='text-2xl font-bold text-slate-400'>%</span>
+             <span className='text-[48px] font-bold text-slate-900 leading-none dark:text-slate-50'>60</span>
+             <span className='text-2xl font-bold text-slate-400 dark:text-slate-50'>%</span>
           </div>
           <div className='flex items-center justify-center py-2'>
             <DonutChartSmall data={[{ label: 'Healthy', value: 52.1, color: '#0D9488' }]} />
           </div>
         </div>
 
-        <div className='bg-white border border-slate-50 rounded-[20px] p-8 shadow-sm'>
-          <h3 className='text-lg font-bold text-slate-900 mb-4'>Score drivers</h3>
-          <ScoreDriversBarChart />
+        <div className='bg-white border border-slate-50 rounded-[20px] p-8 shadow-sm dark:bg-[#1F262E] dark:border-transparent'>
+          <h3 className='text-lg font-bold text-slate-900 mb-4 dark:text-slate-100 '>Score drivers</h3>
+          {/* <ScoreDriversBarChart /> */}
         </div>
       </div>
 
       {/* SCRS Trend & Top Contributors */}
-      <div className={cn('grid grid-cols-1 gap-8 mb-8', isGridLayout ? 'lg:grid-cols-3' : '')}>
+      <div className={cn('grid grid-cols-1 gap-8 mb-8 dark:bg-[#1F262E', isGridLayout ? 'lg:grid-cols-3' : '')}>
         <div className={cn('bg-white border border-slate-50 rounded-[24px] p-8 shadow-sm', isGridLayout ? 'lg:col-span-2' : '')}>
           <div className='flex items-center justify-between mb-8 pb-4 border-b border-slate-50'>
              <h3 className='text-[18px] font-bold text-slate-800'>SCRS Trend</h3>
@@ -78,7 +79,7 @@ const Dashboard: React.FC = () => {
              </button>
           </div>
           <div className='h-[300px] w-full'>
-            <SCRSTrendChart />
+            {/* <SCRSTrendChart /> */}
           </div>
         </div>
 
@@ -243,7 +244,7 @@ const Dashboard: React.FC = () => {
         {/* Alert Trends Container */}
         <div
           className={cn(
-            'bg-white border border-slate-50 rounded-[24px] p-8 shadow-sm dark:bg-slate-700',
+            'bg-white border border-slate-50 rounded-[24px] p-8 shadow-sm dark:bg-[#1F262E] dark:border-transparent',
             isGridLayout ? 'lg:col-span-2' : '',
           )}
         >
@@ -282,7 +283,7 @@ const Dashboard: React.FC = () => {
         </div>
 
         {/* System Health Overview */}
-        <div className='bg-white border border-slate-50 rounded-[24px] p-8 shadow-sm  dark:bg-slate-700'>
+        <div className='bg-white border border-slate-50 rounded-[24px] p-8 shadow-sm dark:bg-[#1F262E] dark:border-transparent'>
           <div className='flex items-center justify-between mb-10'>
             <h3 className='text-[18px] font-bold text-slate-800 tracking-tight'>
               System health overview
@@ -302,11 +303,11 @@ const Dashboard: React.FC = () => {
       >
         <div
           className={cn(
-            'bg-white border border-slate-100 rounded-[20px] p-8 shadow-sm h-[200px] flex items-center justify-between  dark:bg-slate-700',
+            'bg-white border border-slate-100 rounded-[20px] p-8 shadow-sm h-[200px] flex items-center justify-between dark:bg-[#1F262E] dark:border-transparent',
             isGridLayout ? 'lg:col-span-2' : '',
           )}
         >
-          <h3 className='text-lg font-bold text-slate-900'>Event timeline</h3>
+          <h3 className='text-lg font-bold text-slate-900 dark:text-slate-50'>Event timeline</h3>
           <div className='flex items-center gap-6'>
             <button className='flex items-center gap-2 text-xs font-bold text-slate-400 uppercase tracking-widest'>
               Events by time |{' '}
@@ -318,13 +319,14 @@ const Dashboard: React.FC = () => {
           </div>
         </div>
 
-        <div className='bg-white border border-slate-100 rounded-[20px] p-8 shadow-sm h-[200px] flex items-center justify-between  dark:bg-slate-700'>
+        <div className='bg-white border border-slate-100 rounded-[20px] p-8 shadow-sm h-[200px] flex items-center justify-between  dark:bg-[#1F262E] dark:border-transparent'>
           <h3 className='text-lg font-bold text-slate-900'>Events by status</h3>
           <button className='flex items-center gap-2 text-sm font-semibold text-slate-400 hover:text-slate-600 transition-colors'>
             Today <ChevronDown className='size-4' />
           </button>
         </div>
       </div>
+    </div>
     </div>
   );
 };

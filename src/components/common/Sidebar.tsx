@@ -118,7 +118,7 @@ export const Sidebar: React.FC = () => {
 
     return (
         <aside className={cn(
-            "h-screen border-r border-slate-100 flex flex-col bg-white shrink-0 sticky top-0 overflow-y-auto transition-all duration-300 dark:bg-slate-800 dark:border-slate-900",
+            "h-screen border-r border-slate-100 flex flex-col bg-white shrink-0 sticky top-0 overflow-y-auto transition-all duration-300 dark:bg-[#151A21] dark:border-slate-900",
             isSidebarOpen ? "w-[280px]" : "w-0 overflow-hidden opacity-0 border-r-0"
         )}>
             {/* Brand Logo */}

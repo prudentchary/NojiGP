@@ -55,7 +55,7 @@ const ForgotPassword: React.FC = () => {
             className="min-h-screen w-full flex items-center justify-center bg-cover bg-center bg-no-repeat p-4"
             style={{ backgroundImage: `url(${backgroundImage})` }}
         >
-            <div className="relative w-full max-w-[540px] bg-white rounded-[10px] shadow-2xl overflow-hidden animate-in fade-in zoom-in-95 duration-500 dark:bg-slate-700">
+            <div className="relative w-full max-w-[540px] bg-white rounded-[10px] shadow-2xl overflow-hidden animate-in fade-in zoom-in-95 duration-500 dark:bg-[#1F262E]">
                 {/* Header */}
                 <div className="flex justify-between items-start pt-8 px-8 pb-5">
                     <div>

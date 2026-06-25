@@ -25,7 +25,7 @@ export const Header: React.FC = () => {
         : "Overview";
 
     return (
-        <header className="h-[72px] flex items-center justify-between px-8 bg-[#F9FAFB] border-b border-slate-100 sticky top-0 z-40 dark:bg-slate-950 dark:border-slate-800">
+        <header className="h-[72px] flex items-center justify-between px-8 bg-[#F9FAFB] border-b border-slate-100 sticky top-0 z-40 dark:bg-white/10 dark:border-slate-800">
             {/* Left part: Sidebar toggle & Breadcrumbs */}
             <div className="flex items-center gap-6">
                 <button onClick={toggleSidebar} className="text-slate-400 hover:text-slate-600 dark:hover:text-slate-300 transition-colors">

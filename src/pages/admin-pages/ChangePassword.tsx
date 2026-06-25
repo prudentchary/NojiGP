@@ -239,20 +239,21 @@ const ChangePassword: React.FC = () => {
             </div>
 
             <Button
-              type='submit'
-              colorScheme='slate'
-              size='lg'
-              fullWidth
-              isLoading={loading}
-              className={cn(
-                'h-12 mt-6 font-semibold tracking-wide border-none transition-all duration-300 rounded-md',
-                isFormFilled
-                  ? 'bg-slate-900 text-white hover:bg-slate-800 active:bg-black cursor-pointer'
-                  : 'bg-[#E2E8F0] text-slate-400 cursor-not-allowed pointer-events-none',
-              )}
-            >
-              CHANGE PASSWORD
-            </Button>
+  type="submit"
+  // Automatically switches between your clean light mode slate and dark mode gradient
+  colorScheme={isFormFilled ? "gradient" : "slate"}
+  size="lg"
+  fullWidth
+  isLoading={loading}
+  disabled={!isFormFilled || loading}
+  className={cn(
+    "h-12 mt-4 font-bold tracking-widest uppercase border-none transition-all duration-300 rounded-[4px]",
+    // Clean, unified disabled styles across both themes
+    !isFormFilled && "bg-[#E2E8F0] text-slate-400 dark:bg-[#313740] dark:text-slate-500 pointer-events-none"
+  )}
+>
+  Update Password
+</Button>
           </form>
         </div>
       </div>

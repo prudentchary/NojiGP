@@ -22,7 +22,7 @@ export const AddServiceModal: React.FC<AddServiceModalProps> = ({ isOpen, onClos
     };
 
     return (
-        <Modal isOpen={isOpen} onClose={onClose} title="Add API service">
+        <Modal isOpen={isOpen} onClose={onClose} title="Add API service" className="dark:bg-[#1F262E]">
             <form onSubmit={handleSubmit} className="w-full flex flex-col gap-5 mt-4">
                 <div className="flex flex-col gap-1.5">
                     <label className="text-[12px] font-medium text-slate-500">Integration type</label>
@@ -30,7 +30,7 @@ export const AddServiceModal: React.FC<AddServiceModalProps> = ({ isOpen, onClos
                         <select 
                             value={formData.type}
                             onChange={(e) => setFormData({...formData, type: e.target.value})}
-                            className="w-full h-11 px-4 bg-white border border-slate-200 rounded-lg text-[14px] appearance-none focus:outline-none focus:ring-2 focus:ring-slate-100 transition-all cursor-pointer"
+                            className="w-full h-11 px-4 bg-white border border-slate-200 rounded-lg text-[14px] appearance-none focus:outline-none focus:ring-2 focus:ring-slate-100 transition-all cursor-pointer dark:bg-slate-700 dark:border-slate-600 dark:text-white"
                         >
                             <option>Identity provider (IDP)</option>
                             <option>SIEM</option>

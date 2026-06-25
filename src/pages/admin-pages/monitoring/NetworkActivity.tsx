@@ -131,7 +131,7 @@ const NetworkActivity: React.FC = () => {
                 <div className="w-full overflow-x-auto">
                     <table className="w-full text-left">
                         <thead>
-                            <tr className="text-slate-400 text-[13px] font-bold uppercase tracking-widest border-b border-slate-50">
+                            <tr className="text-slate-400 text-[13px] font-bold uppercase tracking-widest border-b border-slate-50 dark:text-slate-50">
                                 <th className="py-4 px-2">Rule Name</th>
                                 <th className="py-4 px-2">Action</th>
                                 <th className="py-4 px-2">Source</th>
@@ -141,12 +141,12 @@ const NetworkActivity: React.FC = () => {
                         </thead>
                         <tbody className="divide-y divide-slate-50">
                             {Array.from({ length: 5 }).map((_, i) => (
-                                <tr key={i} className="group">
-                                    <td className="py-5 px-2 text-[14px] font-bold text-slate-800">Block-RDP-External</td>
-                                    <td className="py-5 px-2 text-[14px] font-bold text-slate-500">Block</td>
-                                    <td className="py-5 px-2 text-[14px] font-bold text-slate-500">0.0.0.0/0</td>
-                                    <td className="py-5 px-2 text-[14px] font-bold text-slate-500">Internal</td>
-                                    <td className="py-5 px-2 text-[14px] font-black text-slate-800">1.245</td>
+                                <tr key={i} className="group dark:text-slate-50">
+                                    <td className="py-5 px-2 text-[14px] font-bold text-slate-400">Block-RDP-External</td>
+                                    <td className="py-5 px-2 text-[14px] font-bold text-slate-400">Block</td>
+                                    <td className="py-5 px-2 text-[14px] font-bold text-slate-400">0.0.0.0/0</td>
+                                    <td className="py-5 px-2 text-[14px] font-bold text-slate-400">Internal</td>
+                                    <td className="py-5 px-2 text-[14px] font-black text-slate-400">1.245</td>
                                 </tr>
                             ))}
                         </tbody>

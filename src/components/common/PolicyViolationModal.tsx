@@ -14,7 +14,7 @@ export const PolicyViolationModal: React.FC<PolicyViolationModalProps> = ({ isOp
         <Modal
             isOpen={isOpen}
             onClose={onClose}
-            className="max-w-[480px] rounded-[24px] p-10 dark:  dark:bg-slate-950"
+            className="max-w-[480px] rounded-[24px] p-10 dark:  dark:bg-[#1F262E] "
         >
             <div className="flex flex-col gap-6 w-full ">
                 <div className="space-y-1">
@@ -45,12 +45,13 @@ export const PolicyViolationModal: React.FC<PolicyViolationModalProps> = ({ isOp
                     </button>
                 </div>
 
-                <Button 
-                    onClick={onClose}
-                    className="w-full bg-[#0F172A] hover:bg-slate-800 text-white rounded-xl h-14 text-[15px] font-bold mt-2 shadow-lg shadow-slate-200 dark:shadow-none"
-                >
-                    Investigate
-                </Button>
+               <Button 
+  onClick={onClose}
+  colorScheme="gradient" // 👈 Done! Natively handles light vs dark mode seamlessly
+  className="w-full rounded-xl h-14 text-[15px] font-bold mt-2 shadow-lg shadow-slate-200 dark:shadow-none"
+>
+  Investigate
+</Button>
             </div>
         </Modal>
     );

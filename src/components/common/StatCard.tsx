@@ -30,7 +30,7 @@ export const StatCard: React.FC<StatCardProps> = ({
 }) => {
     return (
         <div className={cn(
-            "p-6 rounded-[14px] border flex flex-col justify-between h-[110px] transition-all duration-300 hover:shadow-md  dark:bg-slate-700",
+            "p-6 rounded-[14px] border flex flex-col justify-between h-[110px] transition-all duration-300 hover:shadow-md  dark:bg-[#313740]",
             variantStyles[variant],
             className
         )}>

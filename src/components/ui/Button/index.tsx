@@ -4,7 +4,14 @@ import { cn } from "@/lib/cn";
 // ─── Types ────────────────────────────────────────────────────────────────────
 
 type Variant = "solid" | "outline" | "ghost" | "soft" | "link";
-type ColorScheme = "slate" | "blue" | "emerald" | "rose" | "amber" | "violet";
+type ColorScheme =
+  | "slate"
+  | "blue"
+  | "emerald"
+  | "rose"
+  | "amber"
+  | "violet"
+  | "gradient";
 type Size = "xs" | "sm" | "md" | "lg" | "xl";
 
 interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
@@ -45,6 +52,17 @@ const roundedMap: Record<"default" | "full" | "none", string> = {
 };
 
 const variantColorMap: Record<ColorScheme, Record<Variant, string>> = {
+  gradient: {
+    // ☀️ Light Mode: Forces solid slate-900 with white text
+    // 🌙 Dark Mode: Forces the vertical gradient layout with dark text
+    solid:
+      "bg-slate-900 text-white hover:bg-slate-800 active:bg-black border border-transparent " +
+      "dark:bg-[linear-gradient(to_bottom,#99FCFF_45%,#FF00C7_250%)] dark:text-slate-900 dark:hover:opacity-90",
+    outline: "border border-cyan-400 text-cyan-600",
+    ghost: "text-cyan-600 border border-transparent",
+    soft: "bg-cyan-50 text-cyan-700",
+    link: "text-cyan-600 underline",
+  },
   slate: {
     solid:
       "bg-slate-900 text-white hover:bg-slate-700 active:bg-slate-800 border border-slate-900 hover:border-slate-700",
@@ -157,13 +175,14 @@ export function Button({
     "inline-flex items-center justify-center font-medium",
     "transition-all duration-150 ease-in-out",
     "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-blue-500",
-    "select-none cursor-not-allowed",
+    "select-none",
+    isDisabled ? "cursor-not-allowed" : "cursor-pointer",
     "disabled:opacity-50 disabled:pointer-events-none",
     sizeMap[size],
     roundedMap[rounded],
-    variantColorMap[colorScheme][variant],
+    variantColorMap[colorScheme][variant], // Purely read map configuration arrays
     fullWidth ? "w-full" : "",
-    className
+    className,
   );
 
   const iconClass = iconSizeMap[size];
@@ -183,107 +202,5 @@ export function Button({
         </>
       )}
     </button>
-  );
-}
-
-// ─── Icon-Only Button ─────────────────────────────────────────────────────────
-
-interface IconButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
-  icon: ReactNode;
-  label: string; // for accessibility
-  variant?: Variant;
-  colorScheme?: ColorScheme;
-  size?: Size;
-  isLoading?: boolean;
-  rounded?: "default" | "full" | "none";
-}
-
-export function IconButton({
-  icon,
-  label,
-  variant = "solid",
-  colorScheme = "slate",
-  size = "md",
-  isLoading = false,
-  rounded = "default",
-  disabled,
-  className = "",
-  ...props
-}: IconButtonProps) {
-  const squareSizeMap: Record<Size, string> = {
-    xs: "size-7",
-    sm: "size-8",
-    md: "size-10",
-    lg: "size-11",
-    xl: "size-13",
-  };
-
-  const isDisabled = disabled || isLoading;
-
-  const base = cn(
-    "inline-flex items-center justify-center font-medium",
-    "transition-all duration-150 ease-in-out",
-    "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-blue-500",
-    "select-none cursor-pointer",
-    "disabled:opacity-50 disabled:cursor-not-allowed disabled:pointer-events-none",
-    squareSizeMap[size],
-    roundedMap[rounded],
-    variantColorMap[colorScheme][variant],
-    className
-  );
-
-  const iconClass = iconSizeMap[size];
-
-  return (
-    <button className={base} disabled={isDisabled} aria-label={label} {...props}>
-      {isLoading ? (
-        <Spinner className={iconClass} />
-      ) : (
-        <span className={iconClass}>{icon}</span>
-      )}
-    </button>
-  );
-}
-
-// ─── Demo / Preview ───────────────────────────────────────────────────────────
-
-function PlusIcon() {
-  return (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5} strokeLinecap="round">
-      <path d="M12 5v14M5 12h14" />
-    </svg>
-  );
-}
-
-function ArrowIcon() {
-  return (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5} strokeLinecap="round" strokeLinejoin="round">
-      <path d="M5 12h14M12 5l7 7-7 7" />
-    </svg>
-  );
-}
-
-function DownloadIcon() {
-  return (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5} strokeLinecap="round" strokeLinejoin="round">
-      <path d="M12 3v13M7 11l5 5 5-5" />
-      <path d="M5 21h14" />
-    </svg>
-  );
-}
-
-function TrashIcon() {
-  return (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5} strokeLinecap="round" strokeLinejoin="round">
-      <path d="M3 6h18M8 6V4h8v2M19 6l-1 14H6L5 6" />
-    </svg>
-  );
-}
-
-function HeartIcon() {
-  return (
-    <svg viewBox="0 0 24 24" fill="currentColor">
-      <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
-    </svg>
   );
 }
