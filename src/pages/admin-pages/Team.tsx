@@ -30,7 +30,7 @@ const Team: React.FC = () => {
             key: 'name',
             render: (staff: TeamMember) => (
                 <div className="flex flex-col">
-                    <span className="font-bold text-slate-800">{staff.name}</span>
+                    <span className="font-bold text-slate-800 dark:text-slate-50">{staff.name}</span>
                     <span className="text-sm text-slate-400">{staff.role}</span>
                 </div>
             )

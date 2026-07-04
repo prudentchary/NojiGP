@@ -90,34 +90,34 @@ const LoginForm: React.FC = () => {
   const isFormFilled = emailValue.length > 0 && passwordValue.length > 0;
 
   const onSubmit = async (data: LoginFormValues) => {
-    setLoading(true);
-    setServerError(null);
-    try {
-      const response = await api.post("/auth/login", {
-        email: data.email,
-        password: data.password,
-      });
+  setLoading(true);
+  setServerError(null);
+  try {
+    const response = await api.post("/auth/login", {
+      email: data.email,
+      password: data.password,
+    });
 
-      success("OTP sent! Please check your email.");
+    success("OTP sent! Please check your email.");
+    navigate("/verify-otp", { state: { email: data.email } });
+  } catch (err: any) {
+    const errorMessage =
+      err.response?.data?.message ||
+      err.response?.data ||
+      "Incorrect password and email combination";
 
-      // 3. Navigate to the OTP page
+    toastError(errorMessage);
+    setServerError(errorMessage);
 
-      navigate("/verify-otp", { state: { email: data.email } });
-    } catch (err: any) {
-      const errorMessage =
-        err.response?.data?.message ||
-        err.response?.data ||
-        "Incorrect password and email combination";
-
-      toastError(errorMessage);
-      setServerError(errorMessage);
-
-      setError("password", { type: "manual", message: errorMessage });
-    } finally {
-      setLoading(false);
-    }
-  };
-
+    // ─── THE CRITICAL FIX ──────────────────────────────────────
+    // Explicitly flag an error on BOTH keys so both fields turn red!
+    setError("email", { type: "manual", message: errorMessage });
+    setError("password", { type: "manual", message: errorMessage });
+    // ───────────────────────────────────────────────────────────
+  } finally {
+    setLoading(false);
+  }
+};
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
   };
@@ -161,7 +161,7 @@ const LoginForm: React.FC = () => {
                   })}
                   error={errors.email?.message}
                   helperText="Only official email address"
-                  className="h-11 rounded-md border-transparent"
+                  className="h-11 rounded-md"
                   containerClassName="gap-1"
                 />
               </div>

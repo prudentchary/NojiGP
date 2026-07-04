@@ -71,9 +71,9 @@ const Dashboard: React.FC = () => {
 
       {/* SCRS Trend & Top Contributors */}
       <div className={cn('grid grid-cols-1 gap-8 mb-8 dark:bg-[#1F262E', isGridLayout ? 'lg:grid-cols-3' : '')}>
-        <div className={cn('bg-white border border-slate-50 rounded-[24px] p-8 shadow-sm', isGridLayout ? 'lg:col-span-2' : '')}>
-          <div className='flex items-center justify-between mb-8 pb-4 border-b border-slate-50'>
-             <h3 className='text-[18px] font-bold text-slate-800'>SCRS Trend</h3>
+        <div className={cn('bg-white border border-slate-50 rounded-[24px] p-8 shadow-sm dark:bg-[#1f262E] dark:border-transparent', isGridLayout ? 'lg:col-span-2' : '')}>
+          <div className='flex items-center justify-between mb-8 pb-4 border-b border-slate-50 '>
+             <h3 className='text-[18px] font-bold text-slate-800 dark:text-slate-50'>SCRS Trend</h3>
              <button className='flex items-center gap-2 text-[14px] font-semibold text-slate-400'>
                Today <ChevronDown className='size-4' />
              </button>
@@ -83,8 +83,8 @@ const Dashboard: React.FC = () => {
           </div>
         </div>
 
-        <div className='bg-white border border-slate-50 rounded-[24px] p-8 shadow-sm'>
-          <h3 className='text-[18px] font-bold text-slate-800 mb-6'>Top contributors to SCRS</h3>
+        <div className='bg-white border border-slate-50 rounded-[24px] p-8 shadow-sm dark:bg-[#1f262E] dark:border-transparent'>
+          <h3 className='text-[18px] font-bold text-slate-800 mb-6 dark:text-slate-50'>Top contributors to SCRS</h3>
           {/* Map through top contributors here */}
         </div>
       </div>
