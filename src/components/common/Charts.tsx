@@ -116,7 +116,7 @@ export const DonutChartSmall: React.FC = () => (
     </div>
 );
 
-// Updated System Health Data to match screenshot EXACTLY
+// Updated System Health Data to match figma
 const systemHealthData = [
     { name: 'Healthy', value: 52.1, color: '#3A3A3A' },
     { name: 'Warning', value: 22.8, color: '#93BFF8' },
@@ -124,7 +124,7 @@ const systemHealthData = [
 ];
 
 export const SystemHealthChart: React.FC = () => (
-    <div className="flex items-center gap-12 w-full h-[160px]">
+    <div className="flex flex-row lg:flex-col items-center justify-center gap-6 lg:gap-12 w-full min-h-[160px]">
         <div className="w-[140px] h-[140px] relative">
             <ResponsiveContainer width="100%" height="100%">
                 <PieChart>
@@ -134,7 +134,9 @@ export const SystemHealthChart: React.FC = () => (
                         outerRadius={70}
                         paddingAngle={0}
                         dataKey="value"
-                        stroke="#ffffff"
+                        //Changes stroke dynamically to invisible/bg match in dark mode
+                        stroke="var(--chart-stroke, #ffffff)"
+                        className="stroke-white dark:[--chart-stroke:#0B0F14]"
                         strokeWidth={4}
                     >
                         {systemHealthData.map((entry, index) => (
@@ -150,9 +152,11 @@ export const SystemHealthChart: React.FC = () => (
                 <div key={item.name} className="flex items-center group cursor-pointer transition-all duration-200 hover:translate-x-1">
                     <div className="flex items-center gap-3 w-28">
                         <div className="size-[8px] rounded-full" style={{ backgroundColor: item.color }} />
-                        <span className="text-[14px] font-medium text-slate-800">{item.name}</span>
+                        
+                        <span className="text-[14px] font-medium text-slate-800 dark:text-slate-200">{item.name}</span>
                     </div>
-                    <span className="text-[14px] font-medium text-slate-800 tabular-nums transition-colors">{item.value.toFixed(1)}%</span>
+                    
+                    <span className="text-[14px] font-medium text-slate-800 dark:text-slate-300 tabular-nums transition-colors">{item.value.toFixed(1)}%</span>
                 </div>
             ))}
         </div>

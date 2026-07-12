@@ -34,7 +34,7 @@ const Dashboard: React.FC = () => {
     if (user?.isFirstLogin === true) {
       setIsModalOpen(true);
     }
-  }, [user]); // Now this only runs when 'user' state is updated by fetchProfile
+  }, [user]); //this only runs when 'user' state is updated by fetchProfile
 
  
   return (
@@ -46,7 +46,7 @@ const Dashboard: React.FC = () => {
         </h2>
         <button className='flex items-center gap-2 text-sm font-semibold text-slate-400 hover:text-slate-600 transition-colors bg-white px-4 py-2 rounded-lg border border-slate-50 shadow-sm'>
           Today
-          <ChevronDown className='size-4' />
+          <ChevronDown className='size-4'/>
         </button>
       </div>
 
@@ -65,8 +65,9 @@ const Dashboard: React.FC = () => {
 
         <div className='bg-white border border-slate-50 rounded-[20px] p-8 shadow-sm dark:bg-[#1F262E] dark:border-transparent'>
           <h3 className='text-lg font-bold text-slate-900 mb-4 dark:text-slate-100 '>Score drivers</h3>
-          {/* <ScoreDriversBarChart /> */}
+          {/* <ScoreDriversBarChart /> */} //you are trying to import a componmenet that doesnt exist 
         </div>
+        
       </div>
 
       {/* SCRS Trend & Top Contributors */}
@@ -79,7 +80,7 @@ const Dashboard: React.FC = () => {
              </button>
           </div>
           <div className='h-[300px] w-full'>
-            {/* <SCRSTrendChart /> */}
+            {/* <SCRSTrendChart /> */} //you are trying to import a componmenet that doesnt exist 
           </div>
         </div>
 
@@ -89,11 +90,12 @@ const Dashboard: React.FC = () => {
         </div>
       </div>
       
-    <div className='flex flex-col w-full'>
+    <div className='flex flex-col w-full dark:bg-[#1F262E]'>
       <Modal
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
         showCloseButton
+        className='dark:bg-[#1F262E]'
       >
         <div className='flex flex-col items-center text-center'>
           {/* Central Logo Container */}
@@ -109,33 +111,36 @@ const Dashboard: React.FC = () => {
             </div>
           </div>
 
-          <h2 className='text-[26px] font-bold text-slate-900 mb-3 tracking-tight'>
+          <h2 className='text-[26px] font-bold text-slate-900 mb-3 tracking-tight dark:text-slate-100'>
             Change Password
           </h2>
 
-          <p className='text-[15px] leading-relaxed text-slate-500 max-w-[360px] mb-10'>
+          <p className='text-[15px] leading-relaxed text-slate-600 max-w-[360px] mb-10 dark:text-slate-300'>
             Would you like to reset your password to something you can always
             remember?
           </p>
 
           <div className='w-full flex flex-col items-center gap-6'>
-            <Button
-              onClick={() => {
-                setIsModalOpen(false);
-                navigate('/change-password');
-              }}
-              className='bg-slate-900 text-white hover:bg-slate-800 hover:cursor-pointer h-12 w-32 font-bold tracking-tight text-sm rounded-md'
-            >
-              Let's do it
-            </Button>
+  <Button
+    onClick={() => {
+      setIsModalOpen(false);
+      navigate('/change-password');
+    }}
+    // Swapped hardcoded background classes for your clean design tokens!
+    colorScheme="gradient"
+    size="lg"
+    className='h-12 w-44 font-bold tracking-widest uppercase border-none transition-all duration-300 rounded-[4px]'
+  >
+    Let's do it
+  </Button>
 
-            <button
-              onClick={() => setIsModalOpen(false)}
-              className='text-[15px] font-bold text-[#0D9488] hover:text-[#0C8075] transition-colors'
-            >
-              I will do this later
-            </button>
-          </div>
+  <button
+    onClick={() => setIsModalOpen(false)}
+    className='text-[15px] font-bold text-[#0D9488] hover:text-[#0C8075] transition-colors duration-200 dark:text-[#00f3f9] transition-colors duration-200 outline-none focus:ring-0'
+  >
+    I will do this later
+  </button>
+</div>
         </div>
       </Modal>
 
@@ -227,7 +232,7 @@ const Dashboard: React.FC = () => {
 
       {/* Charts Section */}
       <div className='flex items-center justify-between mb-4'>
-        <h2 className='text-xl font-bold text-slate-800 tracking-tight'>
+        <h2 className='text-xl font-bold text-slate-800 tracking-tight dark:text-slate-50'>
           Alert trends
         </h2>
         <button className='flex items-center gap-2 text-sm font-semibold text-slate-400 hover:text-slate-600 transition-colors'>
@@ -249,7 +254,7 @@ const Dashboard: React.FC = () => {
           )}
         >
           <div className='flex items-center gap-10 mb-8 pb-4 border-b border-slate-50'>
-            <button className='flex items-center gap-2 text-[15px] font-bold text-slate-800 hover:text-slate-900 transition-colors'>
+            <button className='flex items-center gap-2 text-[15px] font-bold text-slate-800 hover:text-slate-900 transition-colors dark:text-slate-100 dark:hover:text-slate-500'>
               All levels <ChevronDown className='size-5 text-slate-300' />
             </button>
 
@@ -285,7 +290,7 @@ const Dashboard: React.FC = () => {
         {/* System Health Overview */}
         <div className='bg-white border border-slate-50 rounded-[24px] p-8 shadow-sm dark:bg-[#1F262E] dark:border-transparent'>
           <div className='flex items-center justify-between mb-10'>
-            <h3 className='text-[18px] font-bold text-slate-800 tracking-tight'>
+            <h3 className='text-[18px] font-bold text-slate-800 tracking-tight dark:text-slate-100'>
               System health overview
             </h3>
           </div>
@@ -320,7 +325,7 @@ const Dashboard: React.FC = () => {
         </div>
 
         <div className='bg-white border border-slate-100 rounded-[20px] p-8 shadow-sm h-[200px] flex items-center justify-between  dark:bg-[#1F262E] dark:border-transparent'>
-          <h3 className='text-lg font-bold text-slate-900'>Events by status</h3>
+          <h3 className='text-lg font-bold text-slate-900 dark:text-slate-50'>Events by status</h3>
           <button className='flex items-center gap-2 text-sm font-semibold text-slate-400 hover:text-slate-600 transition-colors'>
             Today <ChevronDown className='size-4' />
           </button>
