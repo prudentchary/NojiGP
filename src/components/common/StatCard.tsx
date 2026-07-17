@@ -4,7 +4,7 @@ import { cn } from "@/lib/cn";
 
 type StatCardVariant = "emerald" | "amber" | "rose" | "slate" | "default";
 
-interface StatCardProps {
+export interface StatCardProps {
     label: string;
     value: string | number;
     percentage?: string;

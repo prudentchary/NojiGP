@@ -71,7 +71,6 @@ const OTPPage: React.FC = () => {
           token,
         });
 
-        console.log('THE ENTIRE BOX:', response.data);
         success('Verification successful! Welcome back.');
         navigate('/dashboard');
       }

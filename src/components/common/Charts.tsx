@@ -91,30 +91,81 @@ const healthData = [
     { name: 'Remaining', value: 40, color: '#E2E8F0' },
 ];
 
-export const DonutChartSmall: React.FC = () => (
-    <div className="w-[140px] h-[140px]">
-        <ResponsiveContainer width="100%" height="100%">
-            <PieChart>
-                <Pie
-                    data={[
-                        { name: 'Remaining', value: 40, color: '#F1F5F9' },
-                        { name: 'Completed', value: 60, color: '#14B8A6' },
-                    ]}
-                    innerRadius={45}
-                    outerRadius={65}
-                    paddingAngle={0}
-                    dataKey="value"
-                    stroke="none"
-                    startAngle={220}
-                    endAngle={-140}
-                >
-                    <Cell fill="#F1F5F9" />
-                    <Cell fill="#14B8A6" />
-                </Pie>
-            </PieChart>
-        </ResponsiveContainer>
-    </div>
-);
+// export const DonutChartSmall: React.FC = () => (
+//     <div className="w-[140px] h-[140px]">
+//         <ResponsiveContainer width="100%" height="100%">
+//             <PieChart>
+//                 <Pie
+//                     data={[
+//                         { name: 'Remaining', value: 40, color: '#F1F5F9' },
+//                         { name: 'Completed', value: 60, color: '#14B8A6' },
+//                     ]}
+//                     innerRadius={45}
+//                     outerRadius={65}
+//                     paddingAngle={0}
+//                     dataKey="value"
+//                     stroke="none"
+//                     startAngle={220}
+//                     endAngle={-140}
+//                 >
+//                     <Cell fill="#F1F5F9" />
+//                     <Cell fill="#14B8A6" />
+//                 </Pie>
+//             </PieChart>
+//         </ResponsiveContainer>
+//     </div>
+// );
+// comment the former donutchart to creat a reusable one for organization SRCS and endpoint  
+interface DonutChartSmallProps {
+    percentage: number;
+    color?: string;
+    remainderColor?: string;
+}
+
+export const DonutChartSmall: React.FC<DonutChartSmallProps> = ({
+    percentage,
+    color = '#14B8A6',
+    remainderColor = '#F1F5F9',
+}) => {
+    const data = [
+        {
+            name: 'Remaining',
+            value: Math.max(0, 100 - percentage),
+            color: remainderColor,
+        },
+        {
+            name: 'Completed',
+            value: percentage,
+            color,
+        },
+    ];
+
+    return (
+        <div className="w-[110px] h-[110px]">
+            <ResponsiveContainer width="100%" height="100%">
+                <PieChart>
+                    <Pie
+                        data={data}
+                        innerRadius={32}
+                        outerRadius={50}
+                        paddingAngle={0}
+                        dataKey="value"
+                        stroke="none"
+                        startAngle={220}
+                        endAngle={-140}
+                    >
+                        {data.map((entry, index) => (
+                            <Cell
+                                key={index}
+                                fill={entry.color}
+                            />
+                        ))}
+                    </Pie>
+                </PieChart>
+            </ResponsiveContainer>
+        </div>
+    );
+};
 
 // Updated System Health Data to match figma
 const systemHealthData = [
