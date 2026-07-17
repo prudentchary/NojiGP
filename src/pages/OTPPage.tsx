@@ -71,7 +71,6 @@ const OTPPage: React.FC = () => {
           token,
         });
 
-        console.log('THE ENTIRE BOX:', response.data);
         success('Verification successful! Welcome back.');
         navigate('/dashboard');
       }
@@ -127,7 +126,7 @@ const OTPPage: React.FC = () => {
                 onChange={handleOtpChange}
                 error={error}
                 className='gap-3 sm:gap-4'
-                inputClassName='w-[62px] h-[52px] rounded-[8px] text-lg sm:w-[58px]'
+                inputClassName='w-[62px] h-[52px] rounded-[8px] text-lg sm:w-[58px] bg-slate-100 dark:bg-[#0B0F14] dark:text-slate-50 focus:outline-none border-transparent'
               />
             </div>
 

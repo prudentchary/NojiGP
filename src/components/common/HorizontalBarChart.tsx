@@ -20,7 +20,8 @@ export const HorizontalBarChart: React.FC<HorizontalBarChartProps> = ({ data, ma
                 const percentage = (item.value / max) * 100;
                 return (
                     <div key={idx} className="flex items-center gap-6 group">
-                        <span className="w-12 text-[12px] font-bold text-slate-300 uppercase tracking-widest">{item.label}</span>
+                        <span className="w-28 text-[13px] font-medium text-slate-300">
+                          {item.label}</span>
                         <div className="flex-1 h-[22px] bg-slate-50/50 rounded-full dark:bg-slate-800/30 overflow-hidden relative">
                             <div 
                                 className="h-full absolute left-0 top-0 transition-all duration-1000 ease-out flex items-center justify-end px-4"

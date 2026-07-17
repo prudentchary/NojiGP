@@ -1,7 +1,7 @@
 import { InputHTMLAttributes, ReactNode, forwardRef } from "react";
 import { cn } from "@/lib/cn";
 
-type Variant = "outline" | "filled" | "flushed" | "unstyled";
+type Variant = "outline" | "filled" | "flushed" | "unstyled" | "error";
 type ColorScheme = "slate" | "blue" | "emerald" | "rose" | "amber" | "violet";
 type Size = "sm" | "md" | "lg";
 
@@ -18,28 +18,17 @@ interface InputProps extends Omit<InputHTMLAttributes<HTMLInputElement>, "size">
 }
 
 const sizeMap: Record<Size, { container: string; input: string; element: string }> = {
-    sm: {
-        container: "h-10",
-        input: "px-3 text-sm",
-        element: "px-2.5",
-    },
-    md: {
-        container: "h-12",
-        input: "px-4 text-[15px]",
-        element: "px-3",
-    },
-    lg: {
-        container: "h-14",
-        input: "px-4 text-lg",
-        element: "px-3.5",
-    },
+    sm: { container: "h-10", input: "px-3 text-sm", element: "px-2.5" },
+    md: { container: "h-12", input: "px-4 text-[15px]", element: "px-3" },
+    lg: { container: "h-14", input: "px-4 text-lg", element: "px-3.5" },
 };
 
 const variantClasses: Record<Variant, string> = {
     outline: "border border-[rgba(138,143,148,1)] bg-white focus-within:border-transparent focus-within:ring-0",
-    filled: "border bg-slate-100 hover:bg-slate-200/70 focus-within:bg-slate-200/70 focus-within:border-transparent focus-within:ring-1 dark:bg-[#2b3541] dark:border-transparent dark:text-slate-100",
+    filled: "border border-transparent bg-slate-100 hover:bg-slate-200/70 focus-within:bg-slate-200/70 dark:bg-[#0B0F14] dark:border-slate-800 dark:text-slate-100 dark:hover:bg-[#0B0F14] dark:hover:border-slate-400 focus-within:bg-slate-[#0B0F14] focus-within:border-transparent dark:focus-within:border-transparent focus-within:ring-0",
     flushed: "border-b border-slate-200 bg-transparent rounded-none px-0 focus-within:border-slate-500 focus-within:ring-0",
     unstyled: "border-none bg-transparent p-0 focus-within:ring-0",
+    error: "border border-red-500 bg-slate-100 dark:bg-[#0B0F14] text-red-500 dark:text-red-400 focus-within:ring-0 focus-within:border-red-500",
 };
 
 const colorSchemeMap: Record<ColorScheme, string> = {
@@ -54,7 +43,7 @@ const colorSchemeMap: Record<ColorScheme, string> = {
 export const Input = forwardRef<HTMLInputElement, InputProps>(
     (
         {
-            variant = "",
+            variant = "outline",
             colorScheme = "slate",
             size = "md",
             label,
@@ -74,24 +63,26 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
 
         return (
             <div className={cn("w-full flex flex-col gap-1.5", containerClassName)}>
+                {/* 1. Label Text Dynamic Color */}
                 {label && (
                     <label
                         htmlFor={id}
                         className={cn(
-                            "text-[13px] font-medium ml-0.5 transition-colors duration-200 dark:text-slate-100",
-                            isInvalid ? "text-rose-500" : "text-slate-700"
+                            "text-[13px] font-medium ml-0.5 transition-colors duration-200",
+                            isInvalid ? "text-red-500 dark:text-red-500" : "text-slate-700 dark:text-slate-100"
                         )}
                     >
                         {label}
                     </label>
                 )}
 
+                {/* 2. Input Border Dynamic Color */}
                 <div
                     className={cn(
                         "relative flex items-center transition-all duration-200 rounded-lg group",
-                        variantClasses[variant],
-                        colorSchemeMap[colorScheme],
-                        isInvalid ? "border-rose-500 focus-within:ring-0 ring-0" : "",
+                        variantClasses[variant as Variant],
+                        colorSchemeMap[colorScheme as ColorScheme],
+                        isInvalid ? "border-red-500 dark:border-red-500 focus-within:border-red-500 focus-within:ring-0 ring-0" : "",
                         sizeConfig.container
                     )}
                 >
@@ -105,7 +96,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
                         ref={ref}
                         id={id}
                         className={cn(
-                            "flex-1 h-full bg-transparent outline-none appearance-none placeholder:text-slate-300",
+                            "flex-1 h-full bg-transparent outline-none appearance-none placeholder:text-slate-400",
                             variant === "flushed" ? "px-0" : leftElement ? "pl-2" : sizeConfig.input,
                             rightElement ? "pr-2" : variant === "flushed" ? "px-0" : sizeConfig.input,
                             className
@@ -120,14 +111,17 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
                     )}
                 </div>
 
-                {error ? (
-                    <p className="text-[11px] font-medium text-rose-500 mt-0.5 ml-0.5">{error}</p>
-                ) : helperText ? (
-                    <p className={cn(
-                        "text-[11px] mt-0.5 ml-0.5 transition-colors duration-200 dark:text-slate-50",
-                        isInvalid ? "text-rose-500" : "text-slate-500"
-                    )}>{helperText}</p>
-                ) : null}
+                {/* 3. Bottom Text (Error or Helper) Dynamic Color */}
+                {(error || helperText) && (
+                    <p
+                        className={cn(
+                            "text-[11px] font-medium mt-0.5 ml-0.5 transition-colors duration-200",
+                            isInvalid ? "text-red-500 dark:text-red-500" : "text-slate-500 dark:text-slate-400"
+                        )}
+                    >
+                        {error || helperText}
+                    </p>
+                )}
             </div>
         );
     }

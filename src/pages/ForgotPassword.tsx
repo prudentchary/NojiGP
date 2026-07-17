@@ -74,7 +74,7 @@ const ForgotPassword: React.FC = () => {
                     </Link>
                 </div>
 
-                <div className="h-[1px] bg-slate-100 w-full" />
+                <div className="h-[1px] bg-slate-100 w-full"/>
 
                 <div className="p-8 pt-6">
                     {!isSuccess ? (
@@ -92,7 +92,7 @@ const ForgotPassword: React.FC = () => {
 
                             <Button
                                 type="submit"
-                                colorScheme="slate"
+                                colorScheme="gradient"
                                 size="lg"
                                 fullWidth
                                 isLoading={loading}

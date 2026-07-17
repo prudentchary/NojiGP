@@ -128,7 +128,7 @@ const ChangePassword: React.FC = () => {
   };
 
   return (
-    <div className='min-h-[calc(100vh-150px)] rounded-3xl w-full flex flex-col items-center justify-center bg-cover bg-center bg-no-repeat p-4 sm:p-6 border border-slate-100/50'>
+    <div className='min-h-[calc(100vh-150px)] rounded-3xl w-full flex flex-col items-center justify-center bg-cover bg-center bg-no-repeat p-4 sm:p-6'>
       <div className='relative w-full max-w-[580px] bg-white/95 backdrop-blur-sm rounded-[16px] shadow-2xl overflow-hidden animate-in fade-in zoom-in-95 duration-500 border border-white/20  dark:bg-slate-900'>
         {/* Header */}
         <div className='flex justify-between items-start pt-8 px-8 pb-5'>

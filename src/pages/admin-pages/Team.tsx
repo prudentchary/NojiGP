@@ -30,7 +30,7 @@ const Team: React.FC = () => {
             key: 'name',
             render: (staff: TeamMember) => (
                 <div className="flex flex-col">
-                    <span className="font-bold text-slate-800">{staff.name}</span>
+                    <span className="font-bold text-slate-800 dark:text-slate-50">{staff.name}</span>
                     <span className="text-sm text-slate-400">{staff.role}</span>
                 </div>
             )
@@ -57,20 +57,20 @@ const Team: React.FC = () => {
         <div className="flex flex-col w-full gap-8">
             {/* Overview Header tailored for individual view (team-3.jpg) */}
             <div className="grid grid-cols-5 gap-4">
-                <div className="col-span-1 bg-white p-6 rounded-[20px] border border-slate-50 shadow-sm flex flex-col justify-center">
-                    <span className="text-sm font-semibold text-slate-500">SCRS</span>
+                <div className="col-span-1 bg-white p-6 rounded-[20px]  shadow-sm flex flex-col justify-center dark:bg-[#1F262E]">
+                    <span className="text-sm font-bold text-slate-700 dark:text-slate-100">SCRS</span>
                     <div className="flex items-baseline gap-1 mt-2">
-                        <span className="text-5xl font-black text-slate-900">40</span>
-                        <span className="text-2xl font-bold text-slate-400 opacity-80">%</span>
+                        <span className="text-5xl font-black text-slate-900 dark:text-slate-100">40</span>
+                        <span className="text-2xl font-bold text-slate-400 opacity-80  dark:text-slate-100">%</span>
                     </div>
                 </div>
                 {/* Additional Metric Cards here */}
             </div>
 
             {/* Security Score Trend */}
-            <div className="bg-white p-6 rounded-[20px] border border-slate-50 shadow-sm">
-                <h3 className="text-lg font-bold text-slate-900 mb-4">Security score trend</h3>
-                <div className="h-[250px] w-full bg-slate-50 rounded-lg">
+            <div className="bg-white p-6 rounded-[20px] shadow-sm dark:bg-[#1F262E]">
+                <h3 className="text-lg font-bold text-slate-900 mb-4 dark:text-slate-100">Security score trend</h3>
+                <div className="h-[250px] w-full bg-slate-50 rounded-lg dark:bg-[#1F262E]">
                     {/* Insert Line Chart Component Here */}
                 </div>
             </div>
