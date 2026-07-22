@@ -8,7 +8,8 @@ import { ScoreDriversBarChart } from "@/components/common/ScoreDriversBarChart";
 import { SCRSTrendChart } from "@/components/common/SCRSTrendChart";
 import { TopContributors } from "@/components/common/TopContributors";
 import { PolicyViolationChart } from "@/components/common/PolicyViolationChart";
-import { filterDashboardStats } from "@/lib/dashboardFilters";
+import { DateRangeDropdown } from "@/components/common/DateRangeDropdown";
+import { filterByDateRange } from "@/lib/dashboardFilters";
 import {
   scoreDrivers,
   scrsTrendData,
@@ -22,13 +23,8 @@ import { cn } from "@/lib/cn";
 import { useLayoutContext } from "@/components/common/LayoutContext";
 import { useAuth } from "@/hooks/useAuth";
 import { DashboardDateRange } from "@/types/dashboard";
-import {
-  filterSCRSTrend,
-  filterPolicyViolations,
-  filterScoreDrivers,
-  filterTopContributors,
-} from "@/lib/dashboardFilters";
-import { DateRangeDropdown } from "@/components/common/DateRangeDropdown";
+
+
 
 const Dashboard: React.FC = () => {
   const { user, isAuthenticated, fetchProfile } = useAuth();
@@ -64,20 +60,23 @@ const Dashboard: React.FC = () => {
 
   // Filtered data/charts based on selected date ranges
 
-  const filteredScoreDrivers = filterScoreDrivers(scoreDrivers, overviewRange);
+  const filteredScoreDrivers = filterByDateRange(scoreDrivers, overviewRange);
 
-  const filteredSCRSTrend = filterSCRSTrend(scrsTrendData, scrsTrendRange);
+ const filteredSCRSTrend = filterByDateRange(
+  scrsTrendData,
+  scrsTrendRange
+);
 
-  const filteredTopContributors = filterTopContributors(
+  const filteredTopContributors = filterByDateRange(
     topContributors,
     scrsTrendRange,
   );
 
-  const filteredPolicyViolations = filterPolicyViolations(
+  const filteredPolicyViolations = filterByDateRange(
     policyViolationData,
     otherDataRange,
   );
-  const filteredDashboardStats = filterDashboardStats(
+  const filteredDashboardStats = filterByDateRange(
     dashboardStats,
     otherDataRange,
   );

@@ -148,7 +148,8 @@ export const DonutChartSmall: React.FC<DonutChartSmallProps> = ({
                         data={data}
                         innerRadius={32}
                         outerRadius={50}
-                        paddingAngle={0}
+                        paddingAngle={3}
+                        cornerRadius={4}
                         dataKey="value"
                         stroke="none"
                         startAngle={220}
@@ -169,9 +170,9 @@ export const DonutChartSmall: React.FC<DonutChartSmallProps> = ({
 
 // Updated System Health Data to match figma
 const systemHealthData = [
-    { name: 'Healthy', value: 52.1, color: '#3A3A3A' },
-    { name: 'Warning', value: 22.8, color: '#93BFF8' },
-    { name: 'Critical', value: 13.9, color: '#95E4B4' },
+    { name: 'High', value: 52.1, color: '#FF3B62' },
+    { name: 'Normal', value: 22.8, color: '#FFD000' },
+    { name: 'Critical', value: 13.9, color: '#86E3CE' },
 ];
 
 export const SystemHealthChart: React.FC = () => (
@@ -181,14 +182,12 @@ export const SystemHealthChart: React.FC = () => (
                 <PieChart>
                     <Pie
                         data={systemHealthData}
-                        innerRadius={40}
+                        innerRadius={42}
                         outerRadius={70}
-                        paddingAngle={0}
+                        paddingAngle={2}         /* Adds space between slices */
+                        cornerRadius={6}         /* Gives slices rounded edges */
                         dataKey="value"
-                        //Changes stroke dynamically to invisible/bg match in dark mode
-                        stroke="var(--chart-stroke, #ffffff)"
-                        className="stroke-white dark:[--chart-stroke:#0B0F14]"
-                        strokeWidth={4}
+                        stroke="none"            /* Prevents harsh white outlines */
                     >
                         {systemHealthData.map((entry, index) => (
                             <Cell key={`cell-${index}`} fill={entry.color} />
@@ -203,10 +202,8 @@ export const SystemHealthChart: React.FC = () => (
                 <div key={item.name} className="flex items-center group cursor-pointer transition-all duration-200 hover:translate-x-1">
                     <div className="flex items-center gap-3 w-28">
                         <div className="size-[8px] rounded-full" style={{ backgroundColor: item.color }} />
-                        
                         <span className="text-[14px] font-medium text-slate-800 dark:text-slate-200">{item.name}</span>
                     </div>
-                    
                     <span className="text-[14px] font-medium text-slate-800 dark:text-slate-300 tabular-nums transition-colors">{item.value.toFixed(1)}%</span>
                 </div>
             ))}
