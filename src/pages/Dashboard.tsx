@@ -27,12 +27,12 @@ import { DashboardDateRange } from "@/types/dashboard";
 
 
 const Dashboard: React.FC = () => {
-  const { user, isAuthenticated, fetchProfile } = useAuth();
+  const { user, isAuthenticated, fetchProfile } = useAuth((state) => state);
   const { isGridLayout } = useLayoutContext();
   const navigate = useNavigate();
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  // Fetch fresh user data on mount
+  //Fetch fresh user data on mount
   useEffect(() => {
     if (isAuthenticated) {
       fetchProfile();

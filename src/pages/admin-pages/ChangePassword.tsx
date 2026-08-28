@@ -1,73 +1,73 @@
-import React, { useState } from 'react';
-import { X } from 'lucide-react';
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import * as z from 'zod';
-import { Button } from '@/components/ui/Button';
-import { Input } from '@/components/ui/Input';
-import { useNavigate, Link } from 'react-router';
-import { useToast } from '@/components/ui/Toast';
-import { cn } from '@/lib/cn';
-import { PasswordLength } from '@/components/ui/PasswordLength';
-import api from '@/lib/api';
+import React, { useState } from "react";
+import { X } from "lucide-react";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import * as z from "zod";
+import { Button } from "@/components/ui/Button";
+import { Input } from "@/components/ui/Input";
+import { useNavigate, Link } from "react-router";
+import { useToast } from "@/components/ui/Toast";
+import { cn } from "@/lib/cn";
+import { PasswordLength } from "@/components/ui/PasswordLength";
+import api from "@/lib/api";
 
 const EyeIcon = () => (
   <svg
-    width='20'
-    height='20'
-    viewBox='0 0 24 24'
-    fill='none'
-    xmlns='http://www.w3.org/2000/svg'
+    width="20"
+    height="20"
+    viewBox="0 0 24 24"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
   >
     <path
-      d='M5 12.5C5 12.5 8 8.5 12 8.5C16 8.5 19 12.5 19 12.5'
-      stroke='currentColor'
-      strokeWidth='2.5'
-      strokeLinecap='round'
+      d="M5 12.5C5 12.5 8 8.5 12 8.5C16 8.5 19 12.5 19 12.5"
+      stroke="currentColor"
+      strokeWidth="2.5"
+      strokeLinecap="round"
     />
-    <circle cx='12' cy='12.5' r='2' fill='currentColor' />
+    <circle cx="12" cy="12.5" r="2" fill="currentColor" />
   </svg>
 );
 
 const EyeOffIcon = () => (
   <svg
-    width='20'
-    height='20'
-    viewBox='0 0 24 24'
-    fill='none'
-    xmlns='http://www.w3.org/2000/svg'
+    width="20"
+    height="20"
+    viewBox="0 0 24 24"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
   >
     <path
-      d='M5 12.5C5 12.5 8 8.5 12 8.5C16 8.5 19 12.5 19 12.5'
-      stroke='currentColor'
-      strokeWidth='2.5'
-      strokeLinecap='round'
-      className='opacity-40'
+      d="M5 12.5C5 12.5 8 8.5 12 8.5C16 8.5 19 12.5 19 12.5"
+      stroke="currentColor"
+      strokeWidth="2.5"
+      strokeLinecap="round"
+      className="opacity-40"
     />
-    <circle cx='12' cy='12.5' r='2' fill='currentColor' />
+    <circle cx="12" cy="12.5" r="2" fill="currentColor" />
     <path
-      d='M3 3L21 21'
-      stroke='currentColor'
-      strokeWidth='2'
-      strokeLinecap='round'
+      d="M3 3L21 21"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
     />
   </svg>
 );
 
 const resetPasswordSchema = z
   .object({
-    oldPassword: z.string().min(1, 'Old password is required'),
+    oldPassword: z.string().min(1, "Old password is required"),
     newPassword: z
       .string()
-      .min(8, 'New password must be at least 8 characters')
-      .regex(/[A-Z]/, 'Must contain at least one uppercase letter')
-      .regex(/[a-z]/, 'Must contain at least one lowercase letter')
-      .regex(/[^A-Za-z0-9]/, 'Must contain at least one special character'),
-    confirmPassword: z.string().min(1, 'Please confirm your password'),
+      .min(8, "New password must be at least 8 characters")
+      .regex(/[A-Z]/, "Must contain at least one uppercase letter")
+      .regex(/[a-z]/, "Must contain at least one lowercase letter")
+      .regex(/[^A-Za-z0-9]/, "Must contain at least one special character"),
+    confirmPassword: z.string().min(1, "Please confirm your password"),
   })
   .refine((data) => data.newPassword === data.confirmPassword, {
-    message: 'Passwords do not match',
-    path: ['confirmPassword'], 
+    message: "Passwords do not match",
+    path: ["confirmPassword"],
   });
 
 type ResetPasswordFormValues = z.infer<typeof resetPasswordSchema>;
@@ -87,39 +87,49 @@ const ChangePassword: React.FC = () => {
   } = useForm<ResetPasswordFormValues>({
     resolver: zodResolver(resetPasswordSchema),
     defaultValues: {
-      oldPassword: '',
-      newPassword: '',
+      oldPassword: "",
+      newPassword: "",
+      confirmPassword: "", // FIX 1: Added confirmPassword default value so watch works immediately
     },
   });
 
-  const oldPasswordValue = watch('oldPassword');
-  const newPasswordValue = watch('newPassword');
+  const oldPasswordValue = watch("oldPassword") || "";
+  const newPasswordValue = watch("newPassword") || "";
+  const confirmPasswordValue = watch("confirmPassword") || "";
 
   const isNewPasswordStrong =
     newPasswordValue.length >= 8 &&
     /[A-Z]/.test(newPasswordValue) &&
     /[a-z]/.test(newPasswordValue) &&
     /[^A-Za-z0-9]/.test(newPasswordValue);
-  const confirmPasswordValue = watch('confirmPassword');
 
   const isFormFilled =
     oldPasswordValue.length > 0 &&
     isNewPasswordStrong &&
-    newPasswordValue === confirmPasswordValue; 
+    confirmPasswordValue.length > 0 &&
+    newPasswordValue === confirmPasswordValue;
 
   const onSubmit = async (data: ResetPasswordFormValues) => {
     setLoading(true);
 
     try {
-      await api.post('/auth/change-password', data);
+      // FIX 2: Explicit payload body structure strictly matching Swagger API documentation
+      const payload = {
+        oldPassword: data.oldPassword,
+        newPassword: data.newPassword,
+        confirmPassword: data.confirmPassword,
+      };
 
-      success('Password changed successfully!');
-      navigate('/dashboard');
+      await api.post("/auth/change-password", payload);
+
+      success("Password changed successfully!");
+      navigate("/dashboard");
     } catch (err: any) {
+      console.error("Change Password error response:", err.response);
       const backendMessage = err.response?.data?.message;
       const errorMessage = Array.isArray(backendMessage)
-        ? backendMessage.join(' • ')
-        : backendMessage || 'Failed to update password';
+        ? backendMessage.join(" • ")
+        : backendMessage || "Failed to update password";
 
       toastError(errorMessage);
     } finally {
@@ -128,50 +138,50 @@ const ChangePassword: React.FC = () => {
   };
 
   return (
-    <div className='min-h-[calc(100vh-150px)] rounded-3xl w-full flex flex-col items-center justify-center bg-cover bg-center bg-no-repeat p-4 sm:p-6'>
-      <div className='relative w-full max-w-[580px] bg-white/95 backdrop-blur-sm rounded-[16px] shadow-2xl overflow-hidden animate-in fade-in zoom-in-95 duration-500 border border-white/20  dark:bg-slate-900'>
+    <div className="min-h-[calc(100vh-150px)] rounded-3xl w-full flex flex-col items-center justify-center bg-cover bg-center bg-no-repeat p-4 sm:p-6">
+      <div className="relative w-full max-w-[580px] bg-white/95 backdrop-blur-sm rounded-[16px] shadow-2xl overflow-hidden animate-in fade-in zoom-in-95 duration-500 border border-white/20 dark:bg-slate-900">
         {/* Header */}
-        <div className='flex justify-between items-start pt-8 px-8 pb-5'>
+        <div className="flex justify-between items-start pt-8 px-8 pb-5">
           <div>
-            <h2 className='text-[28px] font-bold text-slate-900 tracking-tight leading-none mb-3  dark:text-white'>
+            <h2 className="text-[28px] font-bold text-slate-900 tracking-tight leading-none mb-3 dark:text-white">
               Change Password
             </h2>
-            <p className='text-[#94A3B8] text-[15px]'>
+            <p className="text-[#94A3B8] text-[15px]">
               Change password by providing your current password and entering
               the new one.
             </p>
           </div>
           <Link
-            to='/dashboard'
-            className='text-slate-400 hover:text-slate-600 transition-colors p-1 mt-1'
+            to="/dashboard"
+            className="text-slate-400 hover:text-slate-600 transition-colors p-1 mt-1"
           >
-            <X className='size-5' />
+            <X className="size-5" />
           </Link>
         </div>
 
-        <div className='h-[1px] bg-slate-50 w-full' />
+        <div className="h-[1px] bg-slate-50 w-full" />
 
         {/* Content */}
-        <div className='p-8 pt-6'>
-          <form onSubmit={handleSubmit(onSubmit)} className='space-y-6'>
-            <div className='space-y-5 d-flex flex-col items-center justify-center'>
+        <div className="p-8 pt-6">
+          <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+            <div className="space-y-5 flex flex-col items-center justify-center">
               {/* Old Password Field */}
-              <div className='space-y-2 text-left w-full'>
+              <div className="space-y-2 text-left w-full">
                 <Input
-                  id='oldPassword'
-                  label='Old password'
-                  type={showOldPassword ? 'text' : 'password'}
-                  placeholder='............'
-                  variant='filled'
-                  {...register('oldPassword')}
+                  id="oldPassword"
+                  label="Old password"
+                  type={showOldPassword ? "text" : "password"}
+                  placeholder="............"
+                  variant="filled"
+                  {...register("oldPassword")}
                   error={errors.oldPassword?.message}
-                  className='h-11 rounded-md text-2xl font-mono'
-                  containerClassName='gap-1 w-full'
+                  className="h-11 rounded-md text-2xl font-mono"
+                  containerClassName="gap-1 w-full"
                   rightElement={
                     <button
-                      type='button'
+                      type="button"
                       onClick={() => setShowOldPassword(!showOldPassword)}
-                      className='text-slate-600 hover:text-slate-900 transition-all duration-200 outline-none focus:ring-0 py-2 mr-2'
+                      className="text-slate-600 hover:text-slate-900 transition-all duration-200 outline-none focus:ring-0 py-2 mr-2"
                     >
                       {showOldPassword ? <EyeOffIcon /> : <EyeIcon />}
                     </button>
@@ -179,81 +189,78 @@ const ChangePassword: React.FC = () => {
                 />
               </div>
 
-{/* Grid Container for New and Confirm Fields */}
-<div className="grid grid-cols-1 sm:grid-cols-2 gap-4 w-full">
+              {/* Grid Container for New and Confirm Fields */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 w-full">
+                {/* New Password Field */}
+                <div className="space-y-2 text-left w-full min-w-0">
+                  <Input
+                    id="newPassword"
+                    label="New password"
+                    type={showNewPassword ? "text" : "password"}
+                    placeholder="............"
+                    variant="filled"
+                    {...register("newPassword")}
+                    error={errors.newPassword?.message}
+                    className="h-11 rounded-md text-2xl font-mono w-full"
+                    containerClassName="gap-1 w-full relative"
+                    rightElement={
+                      <button
+                        type="button"
+                        onClick={() => setShowNewPassword(!showNewPassword)}
+                        className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-600 hover:text-slate-900 transition-all duration-200 outline-none focus:ring-0 flex items-center justify-center"
+                      >
+                        {showNewPassword ? <EyeOffIcon /> : <EyeIcon />}
+                      </button>
+                    }
+                  />
+                </div>
 
-  {/* New Password Field */}
-  <div className="space-y-2 text-left w-full min-w-0">
-    <Input
-      id="newPassword"
-      label="New password"
-      type={showNewPassword ? 'text' : 'password'}
-      placeholder="............"
-      variant="filled"
-      {...register('newPassword')}
-      error={errors.newPassword?.message}
-      className="h-11 rounded-md text-2xl font-mono w-full"
-      containerClassName="gap-1 w-full relative"
-      rightElement={
-        <button
-          type="button"
-          onClick={() => setShowNewPassword(!showNewPassword)}
-          className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-600 hover:text-slate-900 transition-all duration-200 outline-none focus:ring-0 flex items-center justify-center"
-        >
-          {showNewPassword ? <EyeOffIcon /> : <EyeIcon />}
-        </button>
-      }
-    />
-  </div>
-
-  {/* Confirm Password Field */}
-  <div className="space-y-2 text-left w-full min-w-0">
-    <Input
-      id="confirmPassword"
-      label="Confirm password"
-      type={showNewPassword ? 'text' : 'password'}
-      placeholder="............"
-      variant="filled"
-      {...register('confirmPassword')}
-      error={errors.confirmPassword?.message}
-      className="h-11 rounded-md text-2xl font-mono w-full"
-      containerClassName="gap-1 w-full relative"
-      rightElement={
-        <button
-          type="button"
-          onClick={() => setShowNewPassword(!showNewPassword)}
-          className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-600 hover:text-slate-900 transition-all duration-200 outline-none focus:ring-0 flex items-center justify-center"
-        >
-          {showNewPassword ? <EyeOffIcon /> : <EyeIcon />}
-        </button>
-      }
-    />
-  </div>
-
-</div>
+                {/* Confirm Password Field */}
+                <div className="space-y-2 text-left w-full min-w-0">
+                  <Input
+                    id="confirmPassword"
+                    label="Confirm password"
+                    type={showNewPassword ? "text" : "password"}
+                    placeholder="............"
+                    variant="filled"
+                    {...register("confirmPassword")}
+                    error={errors.confirmPassword?.message}
+                    className="h-11 rounded-md text-2xl font-mono w-full"
+                    containerClassName="gap-1 w-full relative"
+                    rightElement={
+                      <button
+                        type="button"
+                        onClick={() => setShowNewPassword(!showNewPassword)}
+                        className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-600 hover:text-slate-900 transition-all duration-200 outline-none focus:ring-0 flex items-center justify-center"
+                      >
+                        {showNewPassword ? <EyeOffIcon /> : <EyeIcon />}
+                      </button>
+                    }
+                  />
+                </div>
+              </div>
               {newPasswordValue.length > 0 && (
-                <div className='pt-2'>
+                <div className="pt-2 w-full">
                   <PasswordLength password={newPasswordValue} />
                 </div>
               )}
             </div>
 
             <Button
-  type="submit"
-  // Automatically switches between your clean light mode slate and dark mode gradient
-  colorScheme={isFormFilled ? "gradient" : "slate"}
-  size="lg"
-  fullWidth
-  isLoading={loading}
-  disabled={!isFormFilled || loading}
-  className={cn(
-    "h-12 mt-4 font-bold tracking-widest uppercase border-none transition-all duration-300 rounded-[4px]",
-    // Clean, unified disabled styles across both themes
-    !isFormFilled && "bg-[#E2E8F0] text-slate-400 dark:bg-[#313740] dark:text-slate-500 pointer-events-none"
-  )}
->
-  Update Password
-</Button>
+              type="submit"
+              colorScheme={isFormFilled ? "gradient" : "slate"}
+              size="lg"
+              fullWidth
+              isLoading={loading}
+              disabled={!isFormFilled || loading}
+              className={cn(
+                "h-12 mt-4 font-bold tracking-widest uppercase border-none transition-all duration-300 rounded-[4px]",
+                !isFormFilled &&
+                  "bg-[#E2E8F0] text-slate-400 dark:bg-[#313740] dark:text-slate-500 pointer-events-none"
+              )}
+            >
+              Update Password
+            </Button>
           </form>
         </div>
       </div>

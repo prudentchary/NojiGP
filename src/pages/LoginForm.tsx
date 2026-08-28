@@ -104,7 +104,7 @@ const LoginForm: React.FC = () => {
     const errorMessage =
       err.response?.data?.message ||
       err.response?.data ||
-      "Incorrect password and email combination";
+      "Incorrect password and email combinat";
 
     toastError(errorMessage);
     setServerError(errorMessage);

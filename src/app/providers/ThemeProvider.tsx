@@ -10,8 +10,8 @@ const ThemeContext = createContext({
 export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   // 1. Initialize from localStorage
   const [theme, setTheme] = useState<Theme>(() => {
-    return (localStorage.getItem('theme') as Theme) || 'light';
-  });
+  return (localStorage.getItem('theme') as Theme) || 'dark';
+});
 
   // 2. Apply theme to document element and save to localStorage
   useEffect(() => {

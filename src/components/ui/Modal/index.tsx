@@ -63,13 +63,13 @@ export const Modal: React.FC<ModalProps> = ({
                                     )}
 
                                     <Dialog.Title className={cn(
-                                        "text-xl font-bold text-slate-900 mb-4 pr-10",
+                                        "text-xl font-bold text-slate-900 mb-4 pr-10 dark:text-white",
                                         !title && "sr-only"
                                     )}>
                                         {title || "Modal Dialog"}
                                     </Dialog.Title>
 
-                                    <Dialog.Description className="sr-only">
+                                    <Dialog.Description className="sr-only dark:text-white">
                                         Modal dialog content
                                     </Dialog.Description>
 

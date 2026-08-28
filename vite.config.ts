@@ -25,14 +25,15 @@ export default defineConfig({
       "@": path.resolve(__dirname, "./src"),
     },
   },
-  server: {
-    proxy: {
-  "/api": {
-    target: "https://ca-tenant-backend-api-dev.whitebeach-41771a65.centralus.azurecontainerapps.io",
-    changeOrigin: true,
-    secure: true,
-    rewrite: (path) => path.replace(/^\/api/, ""),
+ server: {
+  proxy: {
+    "/api": {
+      target:
+        "https://ca-tenant-backend-api-dev.wittyflower-36a19879.centralus.azurecontainerapps.io",
+      changeOrigin: true,
+      secure: true,
+      rewrite: (path) => path.replace(/^\/api/, ""),
+    },
   },
 },
-  },
 });

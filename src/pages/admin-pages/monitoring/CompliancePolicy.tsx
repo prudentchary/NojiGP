@@ -6,6 +6,9 @@ import { DonutChart } from '@/components/common/DonutChart';
 import { UserCell } from '@/components/common/UserCell';
 import { MonitoringBadge } from '@/components/common/MonitoringBadge';
 import { TimeCell } from '@/components/common/TimeCell';
+import { ScoreDriversBarChart } from "@/components/common/ScoreDriversBarChart";
+import { DateRangeDropdown } from "@/components/common/DateRangeDropdown";
+import type { DashboardDateRange } from "@/types/dashboard";
 
 const barData = [
     { label: 'Title', value: 54, colorStart: '#a855f7', colorEnd: '#3b82f6' },
@@ -43,7 +46,7 @@ const CompliancePolicy: React.FC = () => {
             {/* Policy violations and categories & Top violations */}
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
                 <MonitoringSection title="Policy violations and categories">
-                    <HorizontalBarChart data={barData} max={250} />
+                   <ScoreDriversBarChart data={barData} />
                 </MonitoringSection>
                 <MonitoringSection title="Top violations">
                     <DonutChart data={donutData} />

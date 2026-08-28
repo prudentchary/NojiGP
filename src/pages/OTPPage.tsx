@@ -10,7 +10,7 @@ import api from '@/lib/api';
 import { useLocation } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth'; //zustand
 const OTPPage: React.FC = () => {
-  const { login } = useAuth(); // login auth
+  const login = useAuth((state) => state.login);
   const location = useLocation();
   const navigate = useNavigate();
   const userEmail = location.state?.email || 'User';
@@ -160,7 +160,7 @@ const OTPPage: React.FC = () => {
             <div className='pt-2'>
               <Button
   type="submit"
-  // Let the core component dynamically toggle the styling rules!
+ 
   colorScheme={otp.length === 6 && !loading ? "gradient" : "slate"}
   size="lg"
   fullWidth
@@ -168,7 +168,7 @@ const OTPPage: React.FC = () => {
   disabled={otp.length !== 6 || loading}
   className={cn(
     "h-12 font-bold tracking-widest uppercase border-none transition-all duration-300 rounded-[4px]",
-    // Only manage the disabled appearance overrides here
+    
     otp.length !== 6 && "bg-[#E2E8F0] text-slate-400 dark:bg-[#313740] dark:text-slate-500 pointer-events-none"
   )}
 >
