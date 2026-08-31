@@ -89,35 +89,42 @@ const LoginForm: React.FC = () => {
   const passwordValue = watch("password");
   const isFormFilled = emailValue.length > 0 && passwordValue.length > 0;
 
-  const onSubmit = async (data: LoginFormValues) => {
-  setLoading(true);
-  setServerError(null);
-  try {
-    const response = await api.post("/auth/login", {
-      email: data.email,
-      password: data.password,
-    });
+const onSubmit = async (data: LoginFormValues) => {
+    setLoading(true);
+    setServerError(null);
+    try {
+      const response = await api.post("/auth/login", {
+        email: data.email,
+        password: data.password,
+      });
 
-    success("OTP sent! Please check your email.");
-    navigate("/verify-otp", { state: { email: data.email } });
-  } catch (err: any) {
-    const errorMessage =
-      err.response?.data?.message ||
-      err.response?.data ||
-      "Incorrect password and email combinat";
+      success("OTP sent! Please check your email.");
+      navigate("/verify-otp", { state: { email: data.email } });
+    } catch (err: any) {
+      // 1. Extract raw error payload from response or fallback
+      const rawError = err.response?.data?.message || err.response?.data || err.message;
 
-    toastError(errorMessage);
-    setServerError(errorMessage);
+      // 2. Format safely into a STRING (prevents Minified React error #31)
+      let parsedMessage = "Incorrect password and email combination";
 
-    // ─── THE CRITICAL FIX ──────────────────────────────────────
-    // Explicitly flag an error on BOTH keys so both fields turn red!
-    setError("email", { type: "manual", message: errorMessage });
-    setError("password", { type: "manual", message: errorMessage });
-    // ───────────────────────────────────────────────────────────
-  } finally {
-    setLoading(false);
-  }
-};
+      if (typeof rawError === "string") {
+        parsedMessage = rawError;
+      } else if (Array.isArray(rawError)) {
+        parsedMessage = rawError.map((item) => (typeof item === "object" ? item.message || JSON.stringify(item) : item)).join(", ");
+      } else if (typeof rawError === "object" && rawError !== null) {
+        parsedMessage = rawError.message || JSON.stringify(rawError);
+      }
+
+      // 3. Pass clean string to Toast and Form Errors
+      toastError(parsedMessage);
+      setServerError(parsedMessage);
+
+      setError("email", { type: "manual", message: parsedMessage });
+      setError("password", { type: "manual", message: parsedMessage });
+    } finally {
+      setLoading(false);
+    }
+  };
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
   };

@@ -50,11 +50,30 @@ const Integrations: React.FC = () => {
   const [providers, setProviders] = useState<Provider[]>([]);
   const [loadingTypes, setLoadingTypes] = useState(false);
 
+  // Load existing connected integrations on initial page load
+  useEffect(() => {
+    fetchConnectedIntegrations();
+  }, []);
+
+  // Fetch integration types when modal opens
   useEffect(() => {
     if (isAddModalOpen) {
       fetchIntegrationTypes();
     }
   }, [isAddModalOpen]);
+
+  const fetchConnectedIntegrations = async () => {
+    try {
+      if (integrationService.getIntegrations) {
+        const data = await integrationService.getIntegrations();
+        if (Array.isArray(data)) {
+          setIntegrations(data);
+        }
+      }
+    } catch (error) {
+      console.error("Could not fetch active integrations list:", error);
+    }
+  };
 
   const fetchIntegrationTypes = async () => {
     try {
@@ -67,37 +86,12 @@ const Integrations: React.FC = () => {
         throw new Error("Invalid or empty data from server");
       }
     } catch (error) {
-      console.warn("Backend failed (500), applying frontend fallback:", error);
-
-      // GUARANTEED FALLBACK DATA MATCHING EXACT BACKEND SCHEMA
-      setIntegrationTypes([
-        {
-          id: "12465d03-1187-4f4d-80ef-d86baa5c6ede",
-          name: "ER",
-          slug: "edr",
-          providers: [
-            {
-              id: "14e4a6a4-ee35-4d86-86d8-7626d2d75683",
-              name: "Microsoft Defender",
-              slug: "microsoft-defender",
-            },
-          ],
-        },
-        {
-          id: "type-2",
-          name: "Identity Provider",
-          providers: [
-            { id: "provider-201", name: "Okta" },
-            { id: "provider-202", name: "Microsoft Azure AD" },
-          ],
-        },
-      ]);
+      console.warn("Backend error fallback applied:", error);
     } finally {
       setLoadingTypes(false);
     }
   };
 
-  // Extract nested providers from state instead of firing extra API calls
   const handleTypeChange = (typeId: string) => {
     if (!typeId) {
       setProviders([]);
@@ -106,10 +100,13 @@ const Integrations: React.FC = () => {
 
     const selectedType = integrationTypes.find((t) => t.id === typeId);
 
-    if (selectedType && selectedType.providers && selectedType.providers.length > 0) {
+    if (
+      selectedType &&
+      selectedType.providers &&
+      selectedType.providers.length > 0
+    ) {
       setProviders(selectedType.providers);
     } else {
-      // Fallback network fetch if backend didn't embed providers for this type
       integrationService
         .getProviders(typeId)
         .then((data) => setProviders(Array.isArray(data) ? data : []))
@@ -117,58 +114,70 @@ const Integrations: React.FC = () => {
     }
   };
 
-  const handleAddService = async (data: AddIntegrationForm) => {
-    try {
-      await integrationService.createIntegration(data);
+const handleAddService = async (data: AddIntegrationForm) => {
+  try {
+    // Build payload matching backend requirements for /integrations/create-api-service
+    const payload = {
+      tenantId: (data as any).tenantId || "a0274d42-b32d-4986-ae4f-b0a930961dfc",
+      clientId: (data as any).clientId || data.apiKey,
+      clientSecret: (data as any).clientSecret || data.apiKey,
+    };
 
-      const selectedType = integrationTypes.find(
-        (type) => type.id === data.integrationTypeId
-      );
+    const response = await integrationService.createIntegration(payload);
 
-      const selectedProvider = providers.find(
-        (provider) => provider.id === data.providerId
-      );
+    const selectedType = integrationTypes.find(
+      (type) => type.id === data.integrationTypeId
+    );
+    const selectedProvider = providers.find(
+      (provider) => provider.id === data.providerId
+    );
 
-      const newIntegration: Integration = {
-        id: Math.random().toString(36).substring(2, 11),
-        name: selectedProvider?.name ?? "Unknown",
-        provider: selectedProvider?.name ?? "Unknown",
-        status: "Active",
-        health: 95,
-        type: selectedType?.name ?? "Unknown",
-        integratedOn:
-          new Date().toLocaleDateString("en-GB", {
-            day: "2-digit",
-            month: "short",
-            year: "numeric",
-          }) +
-          ", " +
-          new Date()
-            .toLocaleTimeString("en-US", {
-              hour: "2-digit",
-              minute: "2-digit",
-              hour12: true,
-            })
-            .toLowerCase(),
-      };
+    const newIntegration: Integration = {
+      id: response?.id || Math.random().toString(36).substring(2, 11),
+      name: selectedProvider?.name ?? "API Service",
+      provider: selectedProvider?.name ?? "Provider",
+      status: "Active",
+      health: 100,
+      type: selectedType?.name ?? "API Integration",
+      integratedOn:
+        new Date().toLocaleDateString("en-GB", {
+          day: "2-digit",
+          month: "short",
+          year: "numeric",
+        }) +
+        ", " +
+        new Date()
+          .toLocaleTimeString("en-US", {
+            hour: "2-digit",
+            minute: "2-digit",
+            hour12: true,
+          })
+          .toLowerCase(),
+    };
 
-      setIntegrations((prev) => [...prev, newIntegration]);
-      setIsAddModalOpen(false);
+    setIntegrations((prev) => [newIntegration, ...prev]);
+    setIsAddModalOpen(false);
 
-      setAlert({
-        title: `${newIntegration.type} integration successful`,
-        description: `Your ${newIntegration.provider} has been successfully integrated with Noji Guardian protocol`,
-      });
-    } catch (error) {
-      console.error("Failed to add integration:", error);
-      setAlert({
-        title: "Integration failed",
-        description: "Could not create the integration. Please try again.",
-        variant: "failed",
-      });
-    }
-  };
+    setAlert({
+      title: `${newIntegration.type} integration successful`,
+      description: `Your ${newIntegration.provider} service has been connected.`,
+      variant: "success",
+    });
+  } catch (error: any) {
+    console.error("Failed to create API service:", error);
+    const errorMessage =
+      error?.response?.data?.message ||
+      "Could not create the integration. Please check credentials and try again.";
 
+    setAlert({
+      title: "Integration failed",
+      description: Array.isArray(errorMessage)
+        ? errorMessage.join(", ")
+        : errorMessage,
+      variant: "failed",
+    });
+  }
+};
   const handleRemoveConfirm = () => {
     if (selectedIntegration) {
       setIntegrations(
