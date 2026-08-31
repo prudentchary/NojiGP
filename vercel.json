@@ -1,7 +1,8 @@
 {
-  "rewrites": [{
+  "rewrites": [
+    {
       "source": "/api/:path*",
-      "destination": "https://ca-tenant-backend-api-dev.wittyflower-36a19879.centralus.azurecontainerapps.io/api/:path*"
+      "destination": "https://ca-tenant-backend-api-dev.wittyflower-36a19879.centralus.azurecontainerapps.io/:path*"
     },
     {
       "source": "/(.*)",
