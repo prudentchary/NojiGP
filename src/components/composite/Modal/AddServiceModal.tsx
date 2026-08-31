@@ -156,7 +156,7 @@ export const AddServiceModal = ({
         {/* API Key Input */}
         <div className="flex flex-col gap-1.5">
           <label className="text-[12px] font-medium text-slate-500 uppercase tracking-wider">
-            API KEY
+            API KEYs
           </label>
           <input
             disabled={!formData.providerId}
