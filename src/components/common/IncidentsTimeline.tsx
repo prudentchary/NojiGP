@@ -19,18 +19,18 @@ const SummaryCard: React.FC<SummaryCardProps> = ({ icon: Icon, label, value }) =
 );
 
 const timelineData = [
-    { time: '00:00', count: 30 },
+    { time: '00:00', count: 30},
     { time: '00:01', count: 5 },
-    { time: '00:02', count: 17 },
-    { time: '00:03', count: 13 },
-    { time: '00:04', count: 21 },
-    { time: '00:05', count: 44 },
+    { time: '00:02', count: 17},
+    { time: '00:03', count: 13},
+    { time: '00:04', count: 21},
+    { time: '00:05', count: 44},
     { time: '00:06', count: 2 },
     { time: '00:07', count: 7 },
     { time: '00:08', count: 0 },
     { time: '00:09', count: 5 },
     { time: '00:10', count: 9 },
-    { time: '00:11', count: 11 },
+    { time: '00:11', count: 11},
 ];
 
 const BubbleCloud: React.FC = () => (

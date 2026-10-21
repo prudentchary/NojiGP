@@ -101,10 +101,8 @@ const onSubmit = async (data: LoginFormValues) => {
       success("OTP sent! Please check your email.");
       navigate("/verify-otp", { state: { email: data.email } });
     } catch (err: any) {
-      // 1. Extract raw error payload from response or fallback
       const rawError = err.response?.data?.message || err.response?.data || err.message;
 
-      // 2. Format safely into a STRING (prevents Minified React error #31)
       let parsedMessage = "Incorrect password and email combination";
 
       if (typeof rawError === "string") {
@@ -115,7 +113,6 @@ const onSubmit = async (data: LoginFormValues) => {
         parsedMessage = rawError.message || JSON.stringify(rawError);
       }
 
-      // 3. Pass clean string to Toast and Form Errors
       toastError(parsedMessage);
       setServerError(parsedMessage);
 

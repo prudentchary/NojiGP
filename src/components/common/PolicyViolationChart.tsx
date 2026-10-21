@@ -77,7 +77,7 @@ export const PolicyViolationChart: React.FC<
           margin={{
             top: 5,
             right: 10,
-            left: -25,
+            left: 0,
             bottom: 0,
           }}
         >
@@ -88,7 +88,7 @@ export const PolicyViolationChart: React.FC<
 
           <XAxis
             dataKey="month"
-            axisLine={false}
+            axisLine={true}
             tickLine={false}
             tick={{
               fill: "#94A3B8",
@@ -97,9 +97,8 @@ export const PolicyViolationChart: React.FC<
           />
 
           <YAxis
-            domain={[0, 100]}
-            ticks={[0,10,20,30,40,50,60,70,80,90,100]}
-            axisLine={false}
+            domain={['auto', 'auto']}
+            axisLine={true}
             tickLine={false}
             tick={{
               fill: "#94A3B8",

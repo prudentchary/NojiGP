@@ -1,67 +1,31 @@
+// src/lib/dashboardFilters.ts
 import type { DashboardDateRange } from "@/types/dashboard";
 
-
-/* -------------------------------------------------------------------------- */
-/*                              Score Drivers                                 */
-/* -------------------------------------------------------------------------- */
-
-// export const filterScoreDrivers = (
-//   data: Record<DashboardDateRange, ScoreDriver[]>,
-//   range: DashboardDateRange
-// ): ScoreDriver[] => {
-//   return data[range];
-// };
-
-// /* -------------------------------------------------------------------------- */
-// /*                                SCRS Trend                                  */
-// /* -------------------------------------------------------------------------- */
-
-// export const filterSCRSTrend = (
-//   data: Record<DashboardDateRange, SCRSTrendItem[]>,
-//   range: DashboardDateRange
-// ): SCRSTrendItem[] => {
-//   return data[range];
-// };
-// /* -------------------------------------------------------------------------- */
-// /*                           Top Contributors                                 */
-// /* -------------------------------------------------------------------------- */
-
-// export const filterTopContributors = (
-//   data: Record<DashboardDateRange, TopContributor[]>,
-//   range: DashboardDateRange
-// ): TopContributor[] => {
-//   return data[range];
-// };
-
-// /* -------------------------------------------------------------------------- */
-// /*                           Policy Violations                                */
-// /* -------------------------------------------------------------------------- */
-
-// export const filterPolicyViolations = (
-//   data: Record<DashboardDateRange, PolicyViolationTrend[]>,
-//   range: DashboardDateRange
-// ): PolicyViolationTrend[] => {
-//   return data[range];
-// };
-
-// /* -------------------------------------------------------------------------- */
-// /*                           Card data                               */
-// /* -------------------------------------------------------------------------- */
-
-
-// export const filterDashboardStats = (
-//   data: Record<DashboardDateRange, StatCardProps[]>,
-//   range: DashboardDateRange
-// ): StatCardProps[] => {
-//   return data[range];
-// };
-
-
 export const filterByDateRange = <T>(
-  data: Record<DashboardDateRange, T>,
+  data: Record<string, T>,
   range: DashboardDateRange
 ): T => {
-  return data[range];
+  if (!data) return [] as unknown as T;
+
+  // Map Swagger range values to existing mock object keys
+  const keyMap: Record<DashboardDateRange, string> = {
+    "15m": "today",
+    "1h": "today",
+    "24h": "today",
+    "7d": "7d",
+    "30d": "30d",
+  };
+
+  const targetKey = keyMap[range] ?? range;
+
+  // Look up mapped key first, fallback to "today", direct lookup, or empty array
+  return (
+    data[targetKey] ??
+    data["today"] ??
+    data[range] ??
+    Object.values(data)[0] ??
+    ([] as unknown as T)
+  );
 };
 
 

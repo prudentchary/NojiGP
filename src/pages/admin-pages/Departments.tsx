@@ -1,111 +1,132 @@
-import React, { useEffect, useState } from "react";
+import React, { useState, useMemo } from "react";
 import { useNavigate } from "react-router";
 import { TrendingUp, TrendingDown } from "lucide-react";
 
 import { Table } from "@/components/ui";
+import { useDepartments } from "@/hooks/useOrganization";
+import { Department } from "@/types/organization";
 
-interface Department {
-  id: string;
-  name: string;
-  description: string;
-  staffCount: number;
-  avgRiskScore: number;
-  trend: "up" | "down";
-}
+const MOCK_DEPARTMENTS: Department[] = [
+  {
+    id: "1",
+    name: "Engineering",
+    description: "Core product development and security infrastructure",
+    staffCount: 18,
+    avgRiskScore: 32,
+    trend: "down",
+  },
+  {
+    id: "2",
+    name: "Human Resources",
+    description: "People operations and talent management",
+    staffCount: 8,
+    avgRiskScore: 12,
+    trend: "down",
+  },
+  {
+    id: "3",
+    name: "Marketing",
+    description: "Brand strategy and customer engagement",
+    staffCount: 12,
+    avgRiskScore: 45,
+    trend: "up",
+  },
+  {
+    id: "4",
+    name: "Sales",
+    description: "Revenue generation and customer relationship management",
+    staffCount: 25,
+    avgRiskScore: 60,
+    trend: "down",
+  },
+  {
+    id: "5",
+    name: "Customer Support",
+    description: "Customer service and support operations",
+    staffCount: 15,
+    avgRiskScore: 25,
+    trend: "up",
+  },
+  {
+    id: "6",
+    name: "Finance",
+    description: "Financial planning, analysis, and reporting",
+    staffCount: 10,
+    avgRiskScore: 35,
+    trend: "down",
+  }
+];
 
 /* -------------------------------------------------------------------------- */
-/*                               TEMP MOCK DATA                               */
+/*                                RISK DISPLAY                                */
 /* -------------------------------------------------------------------------- */
 
-const riskScores = [25, 42, 88, 67, 30, 91, 58, 18, 75, 35, 16, 80, 45, 60, 72, 90, 55, 20, 40, 70];
+const getRisk = (score: number = 0) => {
+  if (score <= 30)
+    return {
+      label: "Low",
+      color: "text-emerald-500",
+      border: "border-emerald-500",
+    };
 
-const mockDepartments: Department[] = Array.from({ length: 10 }).map((_, index) => ({
-  id: `${index + 1}`,
-  name: "Finance",
-  description: "Oversees finance",
-  staffCount: 50,
-  avgRiskScore: riskScores[index],
-  trend: index % 3 === 0 ? "down" : "up",
-}));
+  if (score >= 80)
+    return {
+      label: "High",
+      color: "text-rose-500",
+      border: "border-rose-500",
+    };
 
+  return {
+    label: "Med",
+    color: "text-amber-500",
+    border: "border-amber-500",
+  };
+};
 
 const Departments = () => {
   const navigate = useNavigate();
 
   /* -------------------------------------------------------------------------- */
+  /*                                   HOOKS                                    */
+  /* -------------------------------------------------------------------------- */
+
+  const { data: rawDepartments = [], isLoading, isError } = useDepartments();
+
+  // Use API departments if present; otherwise fallback to MOCK_DEPARTMENTS
+  const departmentsToDisplay = useMemo(() => {
+    return rawDepartments.length > 0 ? rawDepartments : MOCK_DEPARTMENTS;
+  }, [rawDepartments]);
+
+  /* -------------------------------------------------------------------------- */
   /*                                   STATE                                    */
   /* -------------------------------------------------------------------------- */
 
-  const [departments, setDepartments] = useState<Department[]>([]);
-
-  const [loading, setLoading] = useState(false);
-
   const [search, setSearch] = useState("");
-
   const [currentPage, setCurrentPage] = useState(1);
-
   const [rowsPerPage, setRowsPerPage] = useState(10);
 
-  const [totalPages, setTotalPages] = useState(1);
-
   /* -------------------------------------------------------------------------- */
-  /*                             FETCH DEPARTMENTS                              */
+  /*                             FILTER & PAGINATION                            */
   /* -------------------------------------------------------------------------- */
 
-  useEffect(() => {
-    fetchDepartments();
-  }, []);
+  // Filter departments based on search query
+  const filteredDepartments = useMemo(() => {
+    if (!search.trim()) return departmentsToDisplay;
+    return departmentsToDisplay.filter(
+      (dept) =>
+        dept.name.toLowerCase().includes(search.toLowerCase()) ||
+        dept.description?.toLowerCase().includes(search.toLowerCase())
+    );
+  }, [departmentsToDisplay, search]);
 
-  const fetchDepartments = async () => {
-    setLoading(true);
+  // Compute total pages based on filtered records
+  const totalPages = Math.ceil(filteredDepartments.length / rowsPerPage) || 1;
 
-    try {
-      /**
-       * API VERSION
-       *
-       * const res = await departmentService.getDepartments({
-       *     page: currentPage,
-       *     pageSize: rowsPerPage,
-       *     search
-       * });
-       *
-       * setDepartments(res.data);
-       * setTotalPages(res.meta.totalPages);
-       */
-
-      // Temporary mock
-      setDepartments(mockDepartments);
-      setTotalPages(1);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  /* -------------------------------------------------------------------------- */
-  /*                               RISK DISPLAY                                 */
-  /* -------------------------------------------------------------------------- */
-
-  const getRisk = (score: number) => {
-    if (score <= 30)
-      return {
-        label: "Low",
-        color: "text-emerald-500",
-        border: "border-emerald-500",
-      };
-
-    if (score >= 80)
-      return {
-        label: "High",
-        color: "text-rose-500",
-        border: "border-rose-500",
-      };
-
-    return {
-      label: "Med",
-      color: "text-amber-500",
-      border: "border-amber-500",
-    };
-  };
+  // Paginate filtered departments
+  const paginatedDepartments = useMemo(() => {
+    const startIndex = (currentPage - 1) * rowsPerPage;
+    return filteredDepartments.slice(startIndex, startIndex + rowsPerPage);
+  }, [filteredDepartments, currentPage, rowsPerPage]);
 
   /* -------------------------------------------------------------------------- */
   /*                                  COLUMNS                                   */
@@ -116,23 +137,22 @@ const Departments = () => {
       header: "Department",
       key: "name",
     },
-
     {
       header: "Description",
       key: "description",
+      render: (department: Department) => department.description || "—",
     },
-
     {
       header: "No of staff",
       key: "staffCount",
+      render: (department: Department) => department.staffCount ?? 0,
     },
-
     {
       header: "AVG risk score",
       key: "avgRiskScore",
-
       render: (department: Department) => {
-        const risk = getRisk(department.avgRiskScore);
+        const score = department.avgRiskScore ?? 0;
+        const risk = getRisk(score);
 
         return (
           <div className="flex items-center gap-2">
@@ -141,17 +161,15 @@ const Departments = () => {
             <span
               className={`px-3 py-1 rounded-full text-xs font-semibold border ${risk.border} ${risk.color}`}
             >
-              {department.avgRiskScore}
+              {score}
             </span>
           </div>
         );
       },
     },
-
     {
       header: "Risk trend",
       key: "trend",
-
       render: (department: Department) =>
         department.trend === "up" ? (
           <TrendingUp className="size-4 text-emerald-500" />
@@ -163,20 +181,28 @@ const Departments = () => {
 
   /* -------------------------------------------------------------------------- */
 
+  if (isError) {
+    return (
+      <div className="w-full p-6 text-center text-rose-500 font-medium">
+        Failed to load departments. Please try again.
+      </div>
+    );
+  }
+
   return (
     <div className="w-full">
-
       <Table
         columns={columns}
-        data={departments}
-        loading={loading}
+        data={paginatedDepartments}
+        loading={isLoading}
         showSearch
         searchPlaceholder="Search department..."
         searchValue={search}
-        onSearchChange={setSearch}
-        onRowClick={(department) =>
-          navigate(`/team/${department.name}`)
-        }
+        onSearchChange={(val) => {
+          setSearch(val);
+          setCurrentPage(1); // Reset to page 1 on search
+        }}
+        onRowClick={(department) => navigate(`/team/${department.id}`)}
         pagination={{
           currentPage,
           totalPages,

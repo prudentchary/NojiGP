@@ -1,18 +1,16 @@
-import React from "react";
-import { useState } from "react";
+import React, { useState } from "react";
 import { useParams } from "react-router";
-import { ChevronDown, TrendingUp } from "lucide-react";
+import { TrendingUp } from "lucide-react";
 import { cn } from "@/lib/cn";
-import { Badge } from "@/components/ui";
-import { ResponsiveContainer, PieChart, Pie, Cell } from "recharts";
 import { DonutChartSmall } from "@/components/common/Charts";
 import { StatCard } from "@/components/common/StatCard";
-import { DateRangeDropdown } from "@/components/common/DateRangeDropdown";
-import type { DashboardDateRange } from "@/types/dashboard";
+import { TimeFilterDropdown } from "@/components/common/TimeFilterDropdown";
 import { SCRSTrendChart } from "@/components/common/SCRSTrendChart";
 
+type TimeRangeKey = "15m" | "1h" | "24h" | "7d" | "30d";
+
 const overviewData: Record<
-  DashboardDateRange,
+  TimeRangeKey,
   {
     scrs: number;
     risk: string;
@@ -25,43 +23,7 @@ const overviewData: Record<
     activeThreats: number;
   }
 > = {
-  today: {
-    scrs: 40,
-    risk: "Moderate",
-    riskVariant: "amber",
-    agentStatus: "On",
-    agentVariant: "emerald",
-    policyViolations: 7,
-    totalAlerts: 7,
-    highSeverityIncidents: 7,
-    activeThreats: 7,
-  },
-
-  "1week": {
-    scrs: 52,
-    risk: "Low",
-    riskVariant: "emerald",
-    agentStatus: "On",
-    agentVariant: "emerald",
-    policyViolations: 3,
-    totalAlerts: 4,
-    highSeverityIncidents: 2,
-    activeThreats: 1,
-  },
-
-  "1month": {
-    scrs: 29,
-    risk: "High",
-    riskVariant: "rose",
-    agentStatus: "Off",
-    agentVariant: "rose",
-    policyViolations: 18,
-    totalAlerts: 24,
-    highSeverityIncidents: 10,
-    activeThreats: 6,
-  },
-
-  "1hr": {
+  "15m": {
     scrs: 45,
     risk: "Moderate",
     riskVariant: "amber",
@@ -72,49 +34,67 @@ const overviewData: Record<
     highSeverityIncidents: 0,
     activeThreats: 0,
   },
+  "1h": {
+    scrs: 42,
+    risk: "Moderate",
+    riskVariant: "amber",
+    agentStatus: "On",
+    agentVariant: "emerald",
+    policyViolations: 2,
+    totalAlerts: 3,
+    highSeverityIncidents: 1,
+    activeThreats: 0,
+  },
+  "24h": {
+    scrs: 40,
+    risk: "Moderate",
+    riskVariant: "amber",
+    agentStatus: "On",
+    agentVariant: "emerald",
+    policyViolations: 7,
+    totalAlerts: 7,
+    highSeverityIncidents: 7,
+    activeThreats: 7,
+  },
+  "7d": {
+    scrs: 52,
+    risk: "Low",
+    riskVariant: "emerald",
+    agentStatus: "On",
+    agentVariant: "emerald",
+    policyViolations: 3,
+    totalAlerts: 4,
+    highSeverityIncidents: 2,
+    activeThreats: 1,
+  },
+  "30d": {
+    scrs: 29,
+    risk: "High",
+    riskVariant: "rose",
+    agentStatus: "Off",
+    agentVariant: "rose",
+    policyViolations: 18,
+    totalAlerts: 24,
+    highSeverityIncidents: 10,
+    activeThreats: 6,
+  },
 };
 
 const securityScoreTrendData: Record<
-  DashboardDateRange,
+  TimeRangeKey,
   {
     month: string;
     score: number;
     severity: "critical" | "normal" | "high";
   }[]
 > = {
-  today: [
-    { month: "Jan", score: 42, severity: "normal" },
-    { month: "Feb", score: 50, severity: "normal" },
-    { month: "Mar", score: 22, severity: "high" },
-    { month: "Apr", score: 33, severity: "critical" },
-    { month: "May", score: 49, severity: "normal" },
-    { month: "Jun", score: 56, severity: "normal" },
-    { month: "Jul", score: 82, severity: "normal" },
-    { month: "Aug", score: 79, severity: "normal" },
-    { month: "Sep", score: 96, severity: "normal" },
-    { month: "Oct", score: 71, severity: "normal" },
-    { month: "Nov", score: 77, severity: "normal" },
-    { month: "Dec", score: 81, severity: "normal" },
+  "15m": [
+    { month: "00m", score: 61, severity: "normal" },
+    { month: "05m", score: 66, severity: "normal" },
+    { month: "10m", score: 58, severity: "high" },
+    { month: "15m", score: 71, severity: "normal" },
   ],
-
-  "1week": [
-    { month: "Mon", score: 38, severity: "high" },
-    { month: "Tue", score: 44, severity: "normal" },
-    { month: "Wed", score: 52, severity: "normal" },
-    { month: "Thu", score: 47, severity: "critical" },
-    { month: "Fri", score: 66, severity: "normal" },
-    { month: "Sat", score: 73, severity: "normal" },
-    { month: "Sun", score: 79, severity: "normal" },
-  ],
-
-  "1month": [
-    { month: "W1", score: 31, severity: "critical" },
-    { month: "W2", score: 49, severity: "normal" },
-    { month: "W3", score: 64, severity: "normal" },
-    { month: "W4", score: 81, severity: "normal" },
-  ],
-
-  "1hr": [
+  "1h": [
     { month: "00m", score: 61, severity: "normal" },
     { month: "10m", score: 66, severity: "normal" },
     { month: "20m", score: 58, severity: "high" },
@@ -123,17 +103,41 @@ const securityScoreTrendData: Record<
     { month: "50m", score: 78, severity: "normal" },
     { month: "60m", score: 82, severity: "normal" },
   ],
+  "24h": [
+    { month: "00:00", score: 42, severity: "normal" },
+    { month: "04:00", score: 50, severity: "normal" },
+    { month: "08:00", score: 22, severity: "high" },
+    { month: "12:00", score: 33, severity: "critical" },
+    { month: "16:00", score: 49, severity: "normal" },
+    { month: "20:00", score: 56, severity: "normal" },
+    { month: "24:00", score: 82, severity: "normal" },
+  ],
+  "7d": [
+    { month: "Mon", score: 38, severity: "high" },
+    { month: "Tue", score: 44, severity: "normal" },
+    { month: "Wed", score: 52, severity: "normal" },
+    { month: "Thu", score: 47, severity: "critical" },
+    { month: "Fri", score: 66, severity: "normal" },
+    { month: "Sat", score: 73, severity: "normal" },
+    { month: "Sun", score: 79, severity: "normal" },
+  ],
+  "30d": [
+    { month: "W1", score: 31, severity: "critical" },
+    { month: "W2", score: 49, severity: "normal" },
+    { month: "W3", score: 64, severity: "normal" },
+    { month: "W4", score: 81, severity: "normal" },
+  ],
 };
 
 const TeamMember: React.FC = () => {
   const { departmentId, staffId } = useParams();
   const [selectedOverviewRange, setSelectedOverviewRange] =
-    useState<DashboardDateRange>("today");
+    useState<TimeRangeKey>("24h");
   const [selectedTrendRange, setSelectedTrendRange] =
-    useState<DashboardDateRange>("today");
+    useState<TimeRangeKey>("24h");
 
-  const currentOverview = overviewData[selectedOverviewRange];
-  const trendData = securityScoreTrendData[selectedTrendRange];
+  const currentOverview = overviewData[selectedOverviewRange] || overviewData["24h"];
+  const trendData = securityScoreTrendData[selectedTrendRange] || securityScoreTrendData["24h"];
 
   return (
     <div className="flex flex-col w-full gap-8">
@@ -143,9 +147,10 @@ const TeamMember: React.FC = () => {
           Kate Huntington's Overview
         </h2>
 
-        <DateRangeDropdown
-          value={selectedOverviewRange}
-          onChange={setSelectedOverviewRange}
+        {/* Updated props: timeRange and onSelectTime */}
+        <TimeFilterDropdown
+          timeRange={selectedOverviewRange}
+          onSelectTime={(val) => setSelectedOverviewRange(val as TimeRangeKey)}
         />
       </div>
 
@@ -206,20 +211,21 @@ const TeamMember: React.FC = () => {
           />
         </div>
       </div>
-      {/* security score trend */}
 
+      {/* Security score trend */}
       <div className="flex flex-col gap-4 dark:shadow-sm">
         <div className="flex items-center justify-between">
           <h3 className="text-lg font-bold dark:text-slate-200">
             Security score trend
           </h3>
 
-          <DateRangeDropdown
-            value={selectedTrendRange}
-            onChange={setSelectedTrendRange}
+          {/* Updated props: timeRange and onSelectTime */}
+          <TimeFilterDropdown
+            timeRange={selectedTrendRange}
+            onSelectTime={(val) => setSelectedTrendRange(val as TimeRangeKey)}
           />
         </div>
-        <div className="w-full m-h-[200px]  bg-amber-50/20 dark:bg-[#313740] dark:border-slate-800 dark:shadow-sm rounded-[20px] border border-slate-100 p-4">
+        <div className="w-full min-h-[200px] bg-amber-50/20 dark:bg-[#313740] dark:border-slate-800 dark:shadow-sm rounded-[20px] border border-slate-100 p-4">
           <SCRSTrendChart data={trendData} />
         </div>
       </div>
@@ -249,8 +255,8 @@ const TeamMember: React.FC = () => {
               <tbody className="divide-y divide-slate-50 dark:divide-slate-800">
                 {Array.from({ length: 5 }).map((_, i) => (
                   <tr key={i}>
-                    <td className="px-6 py-4 text-[13px] font-bold text-slate-700">
-                      12 Jan 2023, 12:90am
+                    <td className="px-6 py-4 text-[13px] font-bold text-slate-700 dark:text-slate-300">
+                      12 Jan 2023, 12:00am
                     </td>
                     <td className="px-6 py-4">
                       <span className="px-3 py-1 bg-slate-100 rounded-full text-[11px] font-bold text-slate-500 dark:bg-slate-800">
@@ -293,8 +299,8 @@ const TeamMember: React.FC = () => {
                   "Login - Corporate Wi-Fi",
                 ].map((desc, i) => (
                   <tr key={i}>
-                    <td className="px-6 py-4 text-[13px] font-bold text-slate-700">
-                      12 Jan 2023, 12:90am
+                    <td className="px-6 py-4 text-[13px] font-bold text-slate-700 dark:text-slate-300">
+                      12 Jan 2023, 12:00am
                     </td>
                     <td className="px-6 py-4 text-[13px] font-semibold text-slate-500">
                       {desc}
@@ -366,35 +372,6 @@ const TeamMember: React.FC = () => {
     </div>
   );
 };
-
-const StatusCard = ({
-  label,
-  value,
-  percentage,
-}: {
-  label: string;
-  value: string;
-  percentage?: string;
-}) => (
-  <div className="bg-white border border-slate-50 rounded-[20px] p-6 shadow-sm flex flex-col justify-between dark:bg-slate-900 dark:border-slate-800">
-    <span className="text-[13px] font-bold text-slate-400 uppercase tracking-widest">
-      {label}
-    </span>
-    <div className="mt-4 flex flex-col gap-1">
-      <span className="text-[28px] font-extrabold text-slate-900 tracking-tight leading-none dark:text-white">
-        {value}
-      </span>
-      {percentage && (
-        <div className="flex items-center gap-1.5 mt-2">
-          <span className="text-[13px] font-bold text-slate-400">
-            {percentage}
-          </span>
-          <TrendingUp className="size-3.5 text-slate-400" />
-        </div>
-      )}
-    </div>
-  </div>
-);
 
 const InfoModule = ({
   title,

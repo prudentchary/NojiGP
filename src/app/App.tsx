@@ -1,4 +1,6 @@
+import { useState } from "react";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ToastProvider } from "@/components/ui/Toast";
 import { LayoutProvider } from "@/components/common/LayoutContext";
 import LoginForm from "@/pages/LoginForm";
@@ -35,87 +37,103 @@ import PolicyConfigs from "@/pages/admin-pages/configuration/PolicyConfigs";
 import AuditLogs from "@/pages/admin-pages/configuration/AuditLogs";
 
 function App() {
+  
+  const [queryClient] = useState(
+    () =>
+      new QueryClient({
+        defaultOptions: {
+          queries: {
+            staleTime: 5 * 60 * 1000, 
+            refetchOnWindowFocus: false, 
+            retry: 2, 
+          },
+        },
+      })
+  );
+
   return (
     <ThemeProvider>
-      <ToastProvider position="top-right">
-        <LayoutProvider>
-          <BrowserRouter>
-            <Routes>
-              {/* Auth Routes */}
-              <Route path="/login" element={<LoginForm />} />
-              <Route path="/forgot-password" element={<ForgotPassword />} />
-              <Route path="/reset-password" element={<ResetPassword />} />
-              <Route path="/register" element={<Register />} />
-              <Route path="/verify-otp" element={<OTPPage />} />
+      <QueryClientProvider client={queryClient}>
+        <ToastProvider position="top-right">
+          <LayoutProvider>
+            <BrowserRouter>
+              <Routes>
+                {/* Auth Routes */}
+                <Route path="/login" element={<LoginForm />} />
+                <Route path="/forgot-password" element={<ForgotPassword />} />
+                <Route path="/reset-password" element={<ResetPassword />} />
+                <Route path="/register" element={<Register />} />
+                <Route path="/verify-otp" element={<OTPPage />} />
 
-              {/* Admin Routes with Layout Wrapper */}
-              <Route element={<ProtectedRoute />}>
-                <Route element={<Layout />}>
-                  <Route path="/dashboard" element={<Dashboard />} />
-                  <Route path="/team" element={<Departments />} />
+                {/* Admin Routes with Layout Wrapper */}
+                <Route element={<ProtectedRoute />}>
+                  <Route element={<Layout />}>
+                    <Route path="/dashboard" element={<Dashboard />} />
+                    <Route path="/team" element={<Departments />} />
 
-                  <Route
-                    path="/team/:departmentId"
-                    element={<DepartmentMembers />}
-                  />
+                    <Route
+                      path="/team/:departmentId"
+                      element={<DepartmentMembers />}
+                    />
 
-                  <Route
-                    path="/team/:departmentId/:staffId"
-                    element={<TeamMember />}
-                  />
-                  <Route path="/alerts" element={<Alerts />} />
-                  <Route path="/threats" element={<Threats />} />
-                  <Route
-                    path="/threats/:id"
-                    element={<ThreatsInvestigation />}
-                  />
-                  <Route
-                    path="/threats/linked-events"
-                    element={<LinkedEvents />}
-                  />
-                  <Route path="/monitoring" element={<Monitoring />} />
-                  <Route
-                    path="/monitoring/user-behaviour"
-                    element={<UserBehaviour />}
-                  />
-                  <Route
-                    path="/monitoring/compliance-policy"
-                    element={<CompliancePolicy />}
-                  />
-                  <Route
-                    path="/monitoring/endpoint-devices"
-                    element={<EndpointDevices />}
-                  />
-                  <Route
-                    path="/monitoring/network-activity"
-                    element={<NetworkActivity />}
-                  />
-                  <Route path="/configuration" element={<Configuration />} />
-                  <Route
-                    path="/configuration/policy-configs"
-                    element={<PolicyConfigs />}
-                  />
-                  <Route
-                    path="/configuration/audit-logs"
-                    element={<AuditLogs />}
-                  />
-                  <Route path="/integrations" element={<Integrations />} />
-                  <Route path="/change-password" element={<ChangePassword />} />
+                    <Route
+                      path="/team/:departmentId/:staffId"
+                      element={<TeamMember />}
+                    />
+                    <Route path="/alerts" element={<Alerts />} />
+                    <Route path="/threats" element={<Threats />} />
+                    <Route
+                      path="/threats/:id"
+                      element={<ThreatsInvestigation />}
+                    />
+                    <Route
+                      path="/threats/linked-events"
+                      element={<LinkedEvents />}
+                    />
+                    <Route path="/monitoring" element={<Monitoring />} />
+                    <Route
+                      path="/monitoring/user-behaviour"
+                      element={<UserBehaviour />}
+                    />
+                    <Route
+                      path="/monitoring/compliance-policy"
+                      element={<CompliancePolicy />}
+                    />
+                    <Route
+                      path="/monitoring/endpoint-devices"
+                      element={<EndpointDevices />}
+                    />
+                    <Route
+                      path="/monitoring/network-activity"
+                      element={<NetworkActivity />}
+                    />
+                    <Route path="/configuration" element={<Configuration />} />
+                    <Route
+                      path="/configuration/policy-configs"
+                      element={<PolicyConfigs />}
+                    />
+                    <Route
+                      path="/configuration/audit-logs"
+                      element={<AuditLogs />}
+                    />
+                    <Route path="/integrations" element={<Integrations />} />
+                    <Route path="/change-password" element={<ChangePassword />} />
+                  </Route>
                 </Route>
-              </Route>
 
-              {/* Development/Preview Routes */}
-              <Route path="/showcase" element={<ShowCase />} />
+                {/* Development/Preview Routes */}
+                <Route path="/showcase" element={<ShowCase />} />
 
-              {/* Default Redirects */}
-              <Route path="/" element={<Navigate to="/login" replace />} />
+                {/* Default Redirects */}
+                <Route path="/" element={<Navigate to="/login" replace />} />
 
-              {/* 404 Handle */}
-              <Route path="*" element={<Navigate to="/login" replace />} />
-            </Routes>
-          </BrowserRouter>
-        </LayoutProvider>
-      </ToastProvider>
+                {/* 404 Handle */}
+                <Route path="*" element={<Navigate to="/login" replace />} />
+              </Routes>
+            </BrowserRouter>
+          </LayoutProvider>
+        </ToastProvider>
+      </QueryClientProvider>
     </ThemeProvider>
   );
 }

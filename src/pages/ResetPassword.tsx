@@ -104,10 +104,10 @@ const onSubmit = async (data: ResetPasswordFormValues) => {
             className="min-h-screen w-full flex items-center justify-center bg-cover bg-center bg-no-repeat p-4 sm:p-6"
             style={{ backgroundImage: `url(${backgroundImage})` }}
         >
-            <div className="relative w-full max-w-[620px] bg-white rounded-[10px] shadow-2xl overflow-hidden">
+            <div className="relative w-full max-w-[620px] bg-white rounded-[10px] shadow-2xl overflow-hidden dark:bg-[#1F262E]">
                 <div className="flex justify-between items-start pt-8 px-8 pb-5">
                     <div>
-                        <h2 className="text-[28px] font-bold text-slate-900 tracking-tight leading-none mb-3">
+                        <h2 className="text-[28px] font-bold text-slate-900 tracking-tight leading-none mb-3 dark:text-slate-200">
                             Set New Password
                         </h2>
                         <p className="text-[#94A3B8] text-[15px]">
@@ -181,7 +181,7 @@ const onSubmit = async (data: ResetPasswordFormValues) => {
 
                         <Button
                             type="submit"
-                            colorScheme="slate"
+                            colorScheme={isFormValid ? "gradient" : "slate"}
                             size="lg"
                             fullWidth
                             isLoading={loading}

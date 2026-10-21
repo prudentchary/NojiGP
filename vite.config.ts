@@ -1,7 +1,7 @@
-import { defineConfig } from 'vite'
-import react from '@vitejs/plugin-react'
-import tailwindcss from '@tailwindcss/vite'
-import path from "path";
+// import { defineConfig } from 'vite'
+// import react from '@vitejs/plugin-react'
+// import tailwindcss from '@tailwindcss/vite'
+// import path from "path";
 
 // https://vite.dev/config/
 // export default defineConfig({
@@ -18,6 +18,13 @@ import path from "path";
 
 // needed to add "proxy" to testrun the app Because i am having issue with the COR policy
 
+// vite.config.ts
+// vite.config.ts
+import path from "path";
+import { defineConfig } from "vite";
+import react from "@vitejs/plugin-react";
+import tailwindcss from "@tailwindcss/vite";
+
 export default defineConfig({
   plugins: [react(), tailwindcss()],
   resolve: {
@@ -25,15 +32,15 @@ export default defineConfig({
       "@": path.resolve(__dirname, "./src"),
     },
   },
- server: {
-  proxy: {
-    "/api": {
-      target:
-        "https://ca-tenant-backend-api-dev.wittyflower-36a19879.centralus.azurecontainerapps.io",
-      changeOrigin: true,
-      secure: true,
-      rewrite: (path) => path.replace(/^\/api/, ""),
+  server: {
+    proxy: {
+      "/api": {
+        target:
+          "https://ca-tenant-backend-api-dev.wittyflower-36a19879.centralus.azurecontainerapps.io",
+        changeOrigin: true,
+        secure: true,
+        rewrite: (path) => path.replace(/^\/api/, ""),
+      },
     },
   },
-},
 });

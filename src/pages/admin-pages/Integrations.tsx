@@ -12,7 +12,7 @@ import {
 import {
   AddServiceModal,
   RemoveServiceModal,
-  type AddIntegrationForm,
+  type CreateApiServicePayload,
 } from "@/components/composite/Modal";
 import { CustomAlert } from "@/components/composite/Alert";
 import Integrattion_Logo from "../../assets/integration_logo.png";
@@ -38,24 +38,24 @@ const Integrations: React.FC = () => {
   const [isRemoveModalOpen, setIsRemoveModalOpen] = useState(false);
   const [selectedIntegration, setSelectedIntegration] =
     useState<Integration | null>(null);
+
   const [alert, setAlert] = useState<{
     title: string;
     description: string;
     variant?: "success" | "failed";
   } | null>(null);
 
+  const [modalError, setModalError] = useState<string | null>(null);
+
   const [integrationTypes, setIntegrationTypes] = useState<IntegrationType[]>(
     []
   );
   const [providers, setProviders] = useState<Provider[]>([]);
-  const [loadingTypes, setLoadingTypes] = useState(false);
 
-  // Load existing connected integrations on initial page load
   useEffect(() => {
     fetchConnectedIntegrations();
   }, []);
 
-  // Fetch integration types when modal opens
   useEffect(() => {
     if (isAddModalOpen) {
       fetchIntegrationTypes();
@@ -77,18 +77,13 @@ const Integrations: React.FC = () => {
 
   const fetchIntegrationTypes = async () => {
     try {
-      setLoadingTypes(true);
       const data = await integrationService.getIntegrationTypes();
 
       if (Array.isArray(data) && data.length > 0) {
         setIntegrationTypes(data);
-      } else {
-        throw new Error("Invalid or empty data from server");
       }
     } catch (error) {
-      console.warn("Backend error fallback applied:", error);
-    } finally {
-      setLoadingTypes(false);
+      console.warn("Could not fetch integration types:", error);
     }
   };
 
@@ -114,70 +109,66 @@ const Integrations: React.FC = () => {
     }
   };
 
-const handleAddService = async (data: AddIntegrationForm) => {
-  try {
-    // Build payload matching backend requirements for /integrations/create-api-service
-    const payload = {
-      tenantId: (data as any).tenantId || "a0274d42-b32d-4986-ae4f-b0a930961dfc",
-      clientId: (data as any).clientId || data.apiKey,
-      clientSecret: (data as any).clientSecret || data.apiKey,
-    };
+  const handleOpenAddModal = () => {
+    setModalError(null);
+    setIsAddModalOpen(true);
+  };
 
-    const response = await integrationService.createIntegration(payload);
-
-    const selectedType = integrationTypes.find(
-      (type) => type.id === data.integrationTypeId
-    );
-    const selectedProvider = providers.find(
-      (provider) => provider.id === data.providerId
-    );
-
-    const newIntegration: Integration = {
-      id: response?.id || Math.random().toString(36).substring(2, 11),
-      name: selectedProvider?.name ?? "API Service",
-      provider: selectedProvider?.name ?? "Provider",
-      status: "Active",
-      health: 100,
-      type: selectedType?.name ?? "API Integration",
-      integratedOn:
-        new Date().toLocaleDateString("en-GB", {
-          day: "2-digit",
-          month: "short",
-          year: "numeric",
-        }) +
-        ", " +
-        new Date()
-          .toLocaleTimeString("en-US", {
-            hour: "2-digit",
-            minute: "2-digit",
-            hour12: true,
-          })
-          .toLowerCase(),
-    };
-
-    setIntegrations((prev) => [newIntegration, ...prev]);
+  const handleCloseAddModal = () => {
     setIsAddModalOpen(false);
+    setModalError(null);
+  };
 
-    setAlert({
-      title: `${newIntegration.type} integration successful`,
-      description: `Your ${newIntegration.provider} service has been connected.`,
-      variant: "success",
-    });
-  } catch (error: any) {
-    console.error("Failed to create API service:", error);
-    const errorMessage =
-      error?.response?.data?.message ||
-      "Could not create the integration. Please check credentials and try again.";
+  const handleAddService = async (payload: CreateApiServicePayload) => {
+    setModalError(null);
+    try {
+      const response = await integrationService.createIntegration(payload);
 
-    setAlert({
-      title: "Integration failed",
-      description: Array.isArray(errorMessage)
+      const newIntegration: Integration = {
+        id: response?.id || Math.random().toString(36).substring(2, 11),
+        name: payload.serviceProvider || "API Service",
+        provider: payload.serviceProvider || "Provider",
+        status: "Active",
+        health: 100,
+        type: payload.integrationType || "API Integration",
+        integratedOn:
+          new Date().toLocaleDateString("en-GB", {
+            day: "2-digit",
+            month: "short",
+            year: "numeric",
+          }) +
+          ", " +
+          new Date()
+            .toLocaleTimeString("en-US", {
+              hour: "2-digit",
+              minute: "2-digit",
+              hour12: true,
+            })
+            .toLowerCase(),
+      };
+
+      setIntegrations((prev) => [newIntegration, ...prev]);
+
+      setAlert({
+        title: `${newIntegration.type} integration successful`,
+        description: `Your ${newIntegration.provider} service has been connected.`,
+        variant: "success",
+      });
+    } catch (error: any) {
+      console.error("Failed to create API service:", error);
+      const errorMessage =
+        error?.response?.data?.message ||
+        "Could not create the integration. Please check credentials and try again.";
+
+      const formattedError = Array.isArray(errorMessage)
         ? errorMessage.join(", ")
-        : errorMessage,
-      variant: "failed",
-    });
-  }
-};
+        : errorMessage;
+
+      setModalError(formattedError);
+      throw error;
+    }
+  };
+
   const handleRemoveConfirm = () => {
     if (selectedIntegration) {
       setIntegrations(
@@ -226,7 +217,7 @@ const handleAddService = async (data: AddIntegrationForm) => {
                     <span>Action</span>
                     {integrations.length > 0 && (
                       <button
-                        onClick={() => setIsAddModalOpen(true)}
+                        onClick={handleOpenAddModal}
                         className="p-1.5 bg-[#14B8A6] text-white rounded-lg hover:bg-[#0D9488] transition-colors shadow-sm"
                         title="Add Integration"
                       >
@@ -254,7 +245,7 @@ const handleAddService = async (data: AddIntegrationForm) => {
                           No services connected
                         </span>
                         <button
-                          onClick={() => setIsAddModalOpen(true)}
+                          onClick={handleOpenAddModal}
                           className="text-[16px] font-bold text-[#14B8A6] hover:text-[#0D9488] flex items-center gap-1 transition-colors"
                         >
                           Add API service <Plus className="size-4" />
@@ -327,11 +318,13 @@ const handleAddService = async (data: AddIntegrationForm) => {
 
       <AddServiceModal
         isOpen={isAddModalOpen}
-        onClose={() => setIsAddModalOpen(false)}
+        onClose={handleCloseAddModal}
         onSubmit={handleAddService}
         integrationTypes={integrationTypes}
         providers={providers}
         onIntegrationTypeChange={handleTypeChange}
+        error={modalError}
+        onClearError={() => setModalError(null)}
       />
 
       {selectedIntegration && (
