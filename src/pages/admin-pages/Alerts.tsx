@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { ChevronDown, ListFilter } from 'lucide-react';
 import { IncidentsTimeline } from '@/components/common/IncidentsTimeline';
 import { IncidentsByStatus, IncidentsByTimeChart } from '@/components/common/AlertCharts';
@@ -6,19 +6,12 @@ import { PolicyViolationModal } from '@/components/common/PolicyViolationModal';
 import { cn } from '@/lib/cn';
 
 const Alerts: React.FC = () => {
+    // Start modal closed (false)
     const [isModalOpen, setIsModalOpen] = useState(false);
-
-    useEffect(() => {
-        const timer = setTimeout(() => {
-            setIsModalOpen(true);
-        }, 3000);
-
-        return () => clearTimeout(timer);
-    }, []);
 
     return (
         <div className="flex flex-col w-full gap-8 animate-in fade-in duration-700">
-            {/* Page Header placeholder (Already in layout but adding local context if needed) */}
+            {/* Page Header placeholder */}
             <div className="flex items-center justify-between mb-2">
                 <h2 className="text-[22px] font-bold text-slate-800 dark:text-white tracking-tight">Incidents Timeline</h2>
                 <button className="flex items-center gap-2 text-[13px] font-bold text-slate-400 hover:text-slate-600 transition-colors uppercase tracking-widest">
@@ -26,8 +19,8 @@ const Alerts: React.FC = () => {
                 </button>
             </div>
 
-            {/* Top Section: Timeline */}
-            <IncidentsTimeline />
+            {/* Top Section: Timeline (Pass click handler to open modal on dot click) */}
+            <IncidentsTimeline onDotClick={() => setIsModalOpen(true)} />
 
             {/* Bottom Section: Grid of Charts */}
             <div className="flex items-center justify-end mb-[-10px]">
@@ -63,7 +56,7 @@ const Alerts: React.FC = () => {
                 </div>
             </div>
 
-            {/* Reusable Alert Modal */}
+            {/* Reusable Alert Modal (Opens ONLY when isModalOpen becomes true via dot click) */}
             <PolicyViolationModal 
                 isOpen={isModalOpen} 
                 onClose={() => setIsModalOpen(false)} 

@@ -34,136 +34,173 @@ const timelineData = [
 
 interface BubbleCloudProps {
   colIdx: number;
+  onClick?: () => void;
 }
 
-const BubbleCloud: React.FC<BubbleCloudProps> = ({ colIdx }) => {
-  // Stagger base delay per column so the breath propagates across the timeline as a wave
-  const baseDelay = colIdx * 0.25;
+const BubbleCloud: React.FC<BubbleCloudProps> = ({ colIdx, onClick }) => {
+  // Stagger base delay per column so the fluid motion ripples across columns
+  const baseDelay = colIdx * 0.35;
 
   return (
-    <div className="relative w-16 h-[140px] mt-4">
+    /* Clicking anywhere inside this bubble cluster triggers the modal */
+    <div onClick={onClick} className="relative w-16 h-[140px] mt-4 cursor-pointer group">
       {/* Row 1: Top Small Dots + Glowy Cyan */}
       <div 
-        className="absolute top-0 left-0 size-[6px] rounded-full bg-[#14B8A6]/90 animate-breath" 
-        style={{ animationDelay: `${baseDelay + 0.1}s` }}
+        className="absolute top-0 left-0 size-[6px] rounded-full bubble-3d-small animate-water group-hover:scale-125 transition-transform" 
+        style={{ animationDelay: `${baseDelay}s` }}
       />
       <div 
-        className="absolute top-0 left-[12px] size-[6px] rounded-full bg-[#14B8A6]/90 animate-breath" 
-        style={{ animationDelay: `${baseDelay + 0.2}s` }}
-      />
-      <div 
-        className="absolute top-0 left-[24px] size-[6px] rounded-full bg-[#14B8A6]/90 animate-breath" 
-        style={{ animationDelay: `${baseDelay + 0.3}s` }}
-      />
-      <div 
-        className="absolute top-[-4px] left-[36px] size-[18px] rounded-full bg-[#A5F3FC]/60 blur-[1px] border border-cyan-100/50 animate-breath" 
-        style={{ animationDelay: `${baseDelay + 0.4}s` }}
-      />
-      
-      {/* Row 2: Smaller dots and Grey accent */}
-      <div 
-        className="absolute top-[18px] left-[4px] size-[7px] rounded-full bg-[#14B8A6]/80 animate-breath" 
-        style={{ animationDelay: `${baseDelay + 0.15}s` }}
-      />
-      <div 
-        className="absolute top-[20px] left-[18px] size-[7px] rounded-full bg-[#14B8A6]/80 animate-breath" 
-        style={{ animationDelay: `${baseDelay + 0.25}s` }}
-      />
-      <div 
-        className="absolute top-[28px] left-[26px] size-[8px] rounded-full bg-slate-200 dark:bg-slate-700 animate-breath" 
-        style={{ animationDelay: `${baseDelay + 0.35}s` }}
-      />
-      <div 
-        className="absolute top-[28px] left-[42px] size-[7px] rounded-full bg-[#14B8A6]/80 animate-breath" 
-        style={{ animationDelay: `${baseDelay + 0.45}s` }}
-      />
-      <div 
-        className="absolute top-[28px] left-[54px] size-[7px] rounded-full bg-[#14B8A6]/80 animate-breath" 
-        style={{ animationDelay: `${baseDelay + 0.55}s` }}
-      />
-      
-      {/* LARGE Teal Bubbles on the left */}
-      <div 
-        className="absolute top-[40px] left-0 size-[28px] rounded-full bg-gradient-to-br from-[#14B8A6] to-[#0D9488] shadow-sm animate-breath" 
-        style={{ animationDelay: `${baseDelay + 0.2}s` }}
-      />
-      <div 
-        className="absolute top-[75px] left-[2px] size-[26px] rounded-full bg-gradient-to-br from-[#14B8A6] to-[#0D9488] shadow-sm animate-breath" 
-        style={{ animationDelay: `${baseDelay + 0.4}s` }}
-      />
-      
-      {/* Mid area tiny dots */}
-      <div 
-        className="absolute top-[52px] left-[30px] size-[6px] rounded-full bg-[#14B8A6]/70 animate-breath" 
-        style={{ animationDelay: `${baseDelay + 0.3}s` }}
-      />
-      <div 
-        className="absolute top-[68px] left-[32px] size-[6px] rounded-full bg-[#14B8A6]/70 animate-breath" 
+        className="absolute top-0 left-[12px] size-[6px] rounded-full bubble-3d-small animate-water group-hover:scale-125 transition-transform" 
         style={{ animationDelay: `${baseDelay + 0.5}s` }}
       />
       <div 
-        className="absolute top-[55px] left-[40px] size-[6px] rounded-full bg-[#14B8A6]/70 animate-breath" 
-        style={{ animationDelay: `${baseDelay + 0.25}s` }}
+        className="absolute top-0 left-[24px] size-[6px] rounded-full bubble-3d-small animate-water group-hover:scale-125 transition-transform" 
+        style={{ animationDelay: `${baseDelay + 1.1}s` }}
       />
       <div 
-        className="absolute top-[55px] left-[52px] size-[6px] rounded-full bg-[#14B8A6]/70 animate-breath" 
-        style={{ animationDelay: `${baseDelay + 0.45}s` }}
+        className="absolute top-[-4px] left-[36px] size-[18px] rounded-full bg-gradient-to-br from-cyan-100/90 via-cyan-300/40 to-teal-500/20 blur-[0.5px] border border-cyan-200/60 shadow-[0_0_10px_rgba(165,243,252,0.5)] animate-water" 
+        style={{ animationDelay: `${baseDelay + 0.8}s` }}
+      >
+        <div className="absolute top-[2px] left-[3px] size-[3px] rounded-full bg-white/90" />
+      </div>
+      
+      {/* Row 2: Smaller dots and Grey accent */}
+      <div 
+        className="absolute top-[18px] left-[4px] size-[7px] rounded-full bubble-3d-small animate-water" 
+        style={{ animationDelay: `${baseDelay + 0.3}s` }}
       />
       <div 
-        className="absolute top-[81px] left-[30px] size-[8px] rounded-full bg-[#14B8A6]/70 animate-breath" 
-        style={{ animationDelay: `${baseDelay + 0.35}s` }}
+        className="absolute top-[20px] left-[18px] size-[7px] rounded-full bubble-3d-small animate-water" 
+        style={{ animationDelay: `${baseDelay + 1.5}s` }}
+      />
+      <div 
+        className="absolute top-[28px] left-[26px] size-[8px] rounded-full bg-gradient-to-br from-slate-200 via-slate-400 to-slate-600 shadow-sm animate-water" 
+        style={{ animationDelay: `${baseDelay + 0.9}s` }}
+      />
+      <div 
+        className="absolute top-[28px] left-[42px] size-[7px] rounded-full bubble-3d-small animate-water" 
+        style={{ animationDelay: `${baseDelay + 0.4}s` }}
+      />
+      <div 
+        className="absolute top-[28px] left-[54px] size-[7px] rounded-full bubble-3d-small animate-water" 
+        style={{ animationDelay: `${baseDelay + 1.2}s` }}
+      />
+      
+      {/* LARGE 3D Teal Bubbles on the left */}
+      <div 
+        className="absolute top-[40px] left-0 size-[28px] rounded-full bubble-3d-large animate-water group-hover:scale-110 transition-transform" 
+        style={{ animationDelay: `${baseDelay + 0.6}s` }}
+      >
+        <div className="absolute top-[4px] left-[5px] size-[5px] rounded-full bg-white/70 blur-[0.2px]" />
+      </div>
+      <div 
+        className="absolute top-[75px] left-[2px] size-[26px] rounded-full bubble-3d-large animate-water group-hover:scale-110 transition-transform" 
+        style={{ animationDelay: `${baseDelay + 1.4}s` }}
+      >
+        <div className="absolute top-[4px] left-[5px] size-[5px] rounded-full bg-white/70 blur-[0.2px]" />
+      </div>
+      
+      {/* Mid area tiny dots */}
+      <div 
+        className="absolute top-[52px] left-[30px] size-[6px] rounded-full bubble-3d-small animate-water" 
+        style={{ animationDelay: `${baseDelay + 0.2}s` }}
+      />
+      <div 
+        className="absolute top-[68px] left-[32px] size-[6px] rounded-full bubble-3d-small animate-water" 
+        style={{ animationDelay: `${baseDelay + 1.0}s` }}
+      />
+      <div 
+        className="absolute top-[55px] left-[40px] size-[6px] rounded-full bubble-3d-small animate-water" 
+        style={{ animationDelay: `${baseDelay + 0.7}s` }}
+      />
+      <div 
+        className="absolute top-[55px] left-[52px] size-[6px] rounded-full bubble-3d-small animate-water" 
+        style={{ animationDelay: `${baseDelay + 1.3}s` }}
+      />
+      <div 
+        className="absolute top-[81px] left-[30px] size-[8px] rounded-full bubble-3d-small animate-water" 
+        style={{ animationDelay: `${baseDelay + 0.5}s` }}
       />
 
       {/* Medium Grey Accent */}
       <div 
-        className="absolute top-[102px] left-[26px] size-[8px] rounded-full bg-slate-200 dark:bg-slate-700 animate-breath" 
-        style={{ animationDelay: `${baseDelay + 0.6}s` }}
+        className="absolute top-[102px] left-[26px] size-[8px] rounded-full bg-gradient-to-br from-slate-300 via-slate-500 to-slate-700 shadow-sm animate-water" 
+        style={{ animationDelay: `${baseDelay + 1.6}s` }}
       />
 
-      {/* LARGE Teal Bubble on the right */}
+      {/* LARGE 3D Teal Bubble on the right */}
       <div 
-        className="absolute top-[92px] left-[40px] size-[28px] rounded-full bg-gradient-to-br from-[#14B8A6] to-[#0D9488] shadow-sm animate-breath" 
-        style={{ animationDelay: `${baseDelay + 0.5}s` }}
-      />
+        className="absolute top-[92px] left-[40px] size-[28px] rounded-full bubble-3d-large animate-water group-hover:scale-110 transition-transform" 
+        style={{ animationDelay: `${baseDelay + 0.8}s` }}
+      >
+        <div className="absolute top-[4px] left-[5px] size-[5px] rounded-full bg-white/70 blur-[0.2px]" />
+      </div>
 
       {/* Bottom clusters */}
       <div 
-        className="absolute bottom-[24px] left-[2px] size-[8px] rounded-full bg-[#14B8A6]/90 animate-breath" 
-        style={{ animationDelay: `${baseDelay + 0.15}s` }}
-      />
-      <div 
-        className="absolute bottom-[24px] left-[16px] size-[8px] rounded-full bg-[#14B8A6]/90 animate-breath" 
-        style={{ animationDelay: `${baseDelay + 0.35}s` }}
-      />
-      <div 
-        className="absolute bottom-[6px] left-[8px] size-[6px] rounded-full bg-[#14B8A6]/90 animate-breath" 
-        style={{ animationDelay: `${baseDelay + 0.2}s` }}
-      />
-      <div 
-        className="absolute bottom-[4px] left-[34px] size-[6px] rounded-full bg-[#14B8A6]/90 animate-breath" 
+        className="absolute bottom-[24px] left-[2px] size-[8px] rounded-full bubble-3d-small animate-water" 
         style={{ animationDelay: `${baseDelay + 0.4}s` }}
+      />
+      <div 
+        className="absolute bottom-[24px] left-[16px] size-[8px] rounded-full bubble-3d-small animate-water" 
+        style={{ animationDelay: `${baseDelay + 1.1}s` }}
+      />
+      <div 
+        className="absolute bottom-[6px] left-[8px] size-[6px] rounded-full bubble-3d-small animate-water" 
+        style={{ animationDelay: `${baseDelay + 0.6}s` }}
+      />
+      <div 
+        className="absolute bottom-[4px] left-[34px] size-[6px] rounded-full bubble-3d-small animate-water" 
+        style={{ animationDelay: `${baseDelay + 1.2}s` }}
       />
     </div>
   );
 };
 
-export const IncidentsTimeline: React.FC = () => {
+interface IncidentsTimelineProps {
+  onDotClick?: () => void;
+}
+
+export const IncidentsTimeline: React.FC<IncidentsTimelineProps> = ({ onDotClick }) => {
   return (
     <>
-      {/* Style block placed safely inside JSX return */}
       <style>{`
-        @keyframes breath {
+        @keyframes waterDrift {
           0%, 100% {
-            transform: scale(1);
-            opacity: 0.5;
+            transform: translate3d(0px, 0px, 0);
+          }
+          25% {
+            transform: translate3d(2px, -3px, 0);
           }
           50% {
-            transform: scale(1.25);
-            opacity: 1;
+            transform: translate3d(-2px, 2px, 0);
+          }
+          75% {
+            transform: translate3d(1px, 3px, 0);
           }
         }
-        .animate-breath {
-          animation: breath 3s ease-in-out infinite !important;
+
+        .animate-water {
+          animation: waterDrift 6s ease-in-out infinite;
+          will-change: transform;
+        }
+
+        /* 3D Large Water Sphere Styling */
+        .bubble-3d-large {
+          background: radial-gradient(circle at 32% 32%, #5EEAD4 0%, #14B8A6 45%, #0D9488 75%, #042F2E 100%);
+          box-shadow: 
+            0 4px 10px rgba(20, 184, 166, 0.35),
+            inset -3px -3px 6px rgba(4, 47, 46, 0.7),
+            inset 2px 2px 5px rgba(255, 255, 255, 0.7);
+        }
+
+        /* 3D Small Water Bubble Styling */
+        .bubble-3d-small {
+          background: radial-gradient(circle at 30% 30%, #99F6E4 0%, #14B8A6 60%, #0F766E 100%);
+          box-shadow: 
+            0 2px 5px rgba(20, 184, 166, 0.25),
+            inset -1px -1px 3px rgba(0, 0, 0, 0.4),
+            inset 1px 1px 2px rgba(255, 255, 255, 0.8);
         }
       `}</style>
 
@@ -190,7 +227,7 @@ export const IncidentsTimeline: React.FC = () => {
                     {item.count}
                   </span>
                   
-                  <BubbleCloud colIdx={idx} />
+                  <BubbleCloud colIdx={idx} onClick={onDotClick} />
 
                   {/* Vertical Divider between slots */}
                   {idx < timelineData.length - 1 && (
