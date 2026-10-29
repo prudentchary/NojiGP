@@ -8,7 +8,7 @@ import { Input } from "@/components/ui/Input";
 import { useNavigate, Link } from "react-router";
 import { useToast } from "@/components/ui/Toast";
 import { cn } from "@/lib/cn";
-import backgroundImage from "@/assets/login_bg.png";
+import backgroundImage from "@/assets/login_bg.jpg";
 import { useAuth } from "@/hooks/useAuth";
 import api from "@/lib/api";
 

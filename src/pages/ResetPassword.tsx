@@ -8,7 +8,7 @@ import { Input } from "@/components/ui/Input";
 import { useNavigate, Link, useSearchParams } from "react-router"; 
 import { useToast } from "@/components/ui/Toast";
 import { cn } from "@/lib/cn";
-import backgroundImage from "@/assets/login_bg.png";
+import backgroundImage from "@/assets/login_bg.jpg";
 import { PasswordLength } from "@/components/ui/PasswordLength";
 import api from "@/lib/api"; 
 

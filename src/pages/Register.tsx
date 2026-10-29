@@ -3,7 +3,7 @@ import { Link } from "react-router";
 import { X } from "lucide-react";
 import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
-import backgroundImage from "@/assets/login_bg.png";
+import backgroundImage from "@/assets/login_bg.jpg";
 
 const Register: React.FC = () => {
     return (

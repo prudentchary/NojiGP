@@ -6,7 +6,7 @@ import * as z from "zod";
 import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
 import { useNavigate, Link } from "react-router";
-import backgroundImage from "@/assets/login_bg.png";
+import backgroundImage from "@/assets/login_bg.jpg";
 import { useToast } from "@/components/ui/Toast";
 import api from "@/lib/api";
 

@@ -5,7 +5,7 @@ import { X } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
 import { PinInput } from '@/components/ui/PinInput';
 import { cn } from '@/lib/cn';
-import backgroundImage from '@/assets/login_bg.png';
+import backgroundImage from '@/assets/login_bg.jpg';
 import api from '@/lib/api';
 import { useLocation } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth'; //zustand
