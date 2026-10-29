@@ -3,7 +3,7 @@ import { ChevronDown, ListFilter } from 'lucide-react';
 import { IncidentsTimeline } from '@/components/common/IncidentsTimeline';
 import { IncidentsByStatus, IncidentsByTimeChart } from '@/components/common/AlertCharts';
 import { PolicyViolationModal } from '@/components/common/PolicyViolationModal';
-import { cn } from '@/lib/cn';
+// import { cn } from '@/lib/cn';
 
 const Alerts: React.FC = () => {
     // Start modal closed (false)
