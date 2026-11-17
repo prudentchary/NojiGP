@@ -47,10 +47,9 @@ const SummaryCard: React.FC<SummaryCardProps> = ({
 // ----------------------------------
 
 const bubbleSizes: Record<ThreatSeverity, number> = {
-  Critical: 44,
-  High: 34,
-  Medium: 24,
-  Low: 14,
+  Critical:30,
+  High: 20,  
+  Low:10,
 };
 
 // ----------------------------------
@@ -82,14 +81,12 @@ const BubbleCloud: React.FC<BubbleCloudProps> = ({
             style={{
               width: size,
               height: size,
-              animationDelay: `${(index % 5) * 0.35}s`,
+              animationDelay: `${(index % 5)}s`,
               background:
                 incident.severity === "Critical"
                   ? "radial-gradient(circle at 32% 32%, #A5F3FC 0%, #22D3EE 40%, #0E7490 100%)"
                   : incident.severity === "High"
                   ? "radial-gradient(circle at 32% 32%, #5EEAD4 0%, #14B8A6 45%, #0D9488 100%)"
-                  : incident.severity === "Medium"
-                  ? "radial-gradient(circle at 32% 32%, #99F6E4 0%, #2DD4BF 55%, #0F766E 100%)"
                   : "radial-gradient(circle at 32% 32%, #CCFBF1 0%, #5EEAD4 60%, #14B8A6 100%)",
               boxShadow:
                 "0 4px 10px rgba(20,184,166,0.35), inset -3px -3px 6px rgba(4,47,46,0.5), inset 2px 2px 5px rgba(255,255,255,0.6)",
@@ -202,7 +199,7 @@ export const IncidentsTimeline: React.FC<
 
                 <div
                   key={slot.timeSlot}
-                  className="flex-1 min-w-[200px] flex flex-col items-center relative"
+                  className="flex-1 min-w-[50px] flex flex-col items-center relative"
                 >
 
                   {/* TIME */}
