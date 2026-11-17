@@ -3,11 +3,17 @@ import { ChevronDown, ListFilter } from 'lucide-react';
 import { IncidentsTimeline } from '@/components/common/IncidentsTimeline';
 import { IncidentsByStatus, IncidentsByTimeChart } from '@/components/common/AlertCharts';
 import { PolicyViolationModal } from '@/components/common/PolicyViolationModal';
+import { useNavigate } from 'react-router';
+import type { Incident } from "@/types/threat.types";
 // import { cn } from '@/lib/cn';
 
 const Alerts: React.FC = () => {
+    const navigate = useNavigate();
     // Start modal closed (false)
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const [selectedIncident, setSelectedIncident] =
+  useState<Incident | null>(null);
+
 
     return (
         <div className="flex flex-col w-full gap-8 animate-in fade-in duration-700">
@@ -20,11 +26,19 @@ const Alerts: React.FC = () => {
             </div>
 
             {/* Top Section: Timeline (Pass click handler to open modal on dot click) */}
-            <IncidentsTimeline onDotClick={() => setIsModalOpen(true)} />
+         <IncidentsTimeline
+  onDotClick={(incident) => {
+    setSelectedIncident(incident);
+    setIsModalOpen(true);
+  }}
+/>
 
             {/* Bottom Section: Grid of Charts */}
             <div className="flex items-center justify-end mb-[-10px]">
-                 <button className="flex items-center gap-2 text-[14px] font-bold text-[#14B8A6] hover:text-[#0D9488] transition-colors">
+                 <button 
+                    onClick={() => navigate('/threats')} // 3. Added click handler to redirect to /threats
+                    className="flex items-center gap-2 text-[14px] font-bold text-[#14B8A6] hover:text-[#0D9488] transition-colors cursor-pointer"
+                >
                     <ListFilter className="size-4" />
                     Timeline view
                 </button>
@@ -57,10 +71,14 @@ const Alerts: React.FC = () => {
             </div>
 
             {/* Reusable Alert Modal (Opens ONLY when isModalOpen becomes true via dot click) */}
-            <PolicyViolationModal 
-                isOpen={isModalOpen} 
-                onClose={() => setIsModalOpen(false)} 
-            />
+           <PolicyViolationModal
+  isOpen={isModalOpen}
+  onClose={() => {
+    setIsModalOpen(false);
+    setSelectedIncident(null);
+  }}
+  incident={selectedIncident}
+/>
         </div>
     );
 };
